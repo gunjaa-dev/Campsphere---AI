@@ -1,14 +1,12 @@
 import React, { useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   GraduationCap,
   Sparkles,
   ChevronRight,
   Terminal,
-  Cloud,
-  Database,
   Bell,
- Settings,
+  Settings,
   Upload,
 } from "lucide-react";
 
@@ -44,42 +42,33 @@ const skills = [
   { label: "Problem Solving", value: 85 },
 ];
 
-const applications = [
-  {
-    title: "Software Engineer - AI/ML",
-    company: "Neural Systems Inc.",
-    status: "PLACED",
-    icon: Terminal,
-  },
-  {
-    title: "Junior Frontend Developer",
-    company: "Skyline Digital",
-    status: "PENDING",
-    icon: Cloud,
-  },
-  {
-    title: "Data Analyst Trainee",
-    company: "Global Insight Corp",
-    status: "READY",
-    icon: Database,
-  },
-];
-
-const statusColors = {
-  PLACED: "bg-green-100 text-green-700",
-  PENDING: "bg-yellow-100 text-yellow-700",
-  READY: "bg-blue-100 text-blue-700",
-};
-
 function Dashboard() {
+  const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
-
+  const savedProfile =
+    JSON.parse(localStorage.getItem("profile")) || {};
+  const readiness =
+    (savedProfile.skills?.length || 0) * 10 +
+    (savedProfile.projects?.length || 0) * 15;
   const [loading, setLoading] = useState(false);
 
   const [resumeData, setResumeData] = useState(null);
 
+  const notifications = [
+    resumeData
+      ? `Resume score: ${resumeData.summary.overall_score}`
+      : "Upload resume for AI analysis",
+
+    resumeData
+      ? `${resumeData.summary.total_skills} skills detected`
+      : "No resume analyzed yet",
+
+    savedProfile.projects?.length
+      ? `${savedProfile.projects.length} projects added`
+      : "No projects added yet",
+  ];
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const fileInputRef = useRef();
 
   const { pathname } = useLocation();
@@ -96,10 +85,10 @@ function Dashboard() {
       pathname.startsWith(path)
     )
       ? pageTitles[
-          Object.keys(pageTitles).find((path) =>
-            pathname.startsWith(path)
-          )
-        ]
+      Object.keys(pageTitles).find((path) =>
+        pathname.startsWith(path)
+      )
+      ]
       : "Placement Intelligence";
 
   /* Upload Button */
@@ -179,17 +168,16 @@ function Dashboard() {
                 </h4>
 
                 <div className="space-y-3 text-sm">
-                  <div className="border-b pb-2">
-                    New company added for placements
-                  </div>
 
-                  <div className="border-b pb-2">
-                    12 students shortlisted today
-                  </div>
-
-                  <div>
-                    Placement report updated
-                  </div>
+                  {notifications.map(
+                    (notification, index) => (
+                      <div
+                        key={index}
+                        className="border-b pb-2 last:border-none"
+                      >
+                        {notification}
+                      </div>
+                    ))}
                 </div>
               </div>
             )}
@@ -228,12 +216,14 @@ function Dashboard() {
           </div>
 
           {/* Avatar */}
-          <div className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-semibold">
+          <div
+            onClick={() => navigate("/student-dashboard/profile")}
+            className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-semibold cursor-pointer"
+          >
             {(user?.fullName || "User")
-                .charAt(0)
-                .toUpperCase()}
+              .charAt(0)
+              .toUpperCase()}
           </div>
-
         </div>
       </div>
 
@@ -378,7 +368,7 @@ function Dashboard() {
         {/* Readiness */}
         <div className="bg-white rounded-2xl p-5 shadow border flex flex-col items-center">
 
-          <ReadinessChart value={82} />
+          <ReadinessChart value={Math.min(readiness, 100)} />
 
           <h3 className="mt-3 font-semibold">
             Readiness Score
@@ -395,7 +385,7 @@ function Dashboard() {
 
           <div className="mt-2">
             <span className="text-4xl font-bold">
-              8.5
+              {savedProfile.cgpa || "Not added"}
             </span>
 
             <span className="text-sm text-gray-500 ml-1">
@@ -413,21 +403,23 @@ function Dashboard() {
           </div>
 
           <div className="flex flex-wrap gap-2 mt-3">
+            {savedProfile.skills?.length > 0 ? (
 
-            {[
-              "React",
-              "Python",
-              "NLP",
-              "Node.js",
-              "Machine Learning",
-            ].map((skill) => (
-              <Badge
-                key={skill}
-                className="bg-gray-100"
-              >
-                {skill}
-              </Badge>
-            ))}
+              savedProfile.skills.map((skill) => (
+                <Badge
+                  key={skill}
+                  className="bg-gray-100"
+                >
+                  {skill}
+                </Badge>
+              ))
+
+            ) : (
+
+              <p className="text-sm text-gray-500">
+                No skills added yet
+              </p>
+            )}
 
           </div>
         </div>
@@ -471,46 +463,66 @@ function Dashboard() {
           <h3 className="font-semibold mb-4">
             Applications
           </h3>
+          {savedProfile.projects?.length > 0 ? (
 
-          {applications.map((app) => (
-            <div
-              key={app.title}
-              className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-xl transition"
-            >
-              <app.icon />
+            savedProfile.projects.map(
+              (project, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-xl transition"
+                >
+                  <Terminal />
 
-              <div className="flex-1">
+                  <div className="flex-1">
 
-                <p className="font-semibold text-sm">
-                  {app.title}
-                </p>
+                    <p className="font-semibold text-sm">
+                      {project.title || "Untitled Project"}
+                    </p>
 
-                <p className="text-xs text-gray-500">
-                  {app.company}
-                </p>
-              </div>
+                    <p className="text-xs text-gray-500">
+                      {project.description ||
+                        "No description"}
+                    </p>
 
-              <span
-                className={`text-xs px-2 py-1 rounded-full ${statusColors[app.status]}`}
-              >
-                {app.status}
-              </span>
-            </div>
-          ))}
+                  </div>
+
+                  <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-700">
+                    PROJECT
+                  </span>
+                </div>
+              )
+            )
+
+          ) : (
+
+            <p className="text-sm text-gray-500">
+              No projects added yet
+            </p>
+
+          )}
         </div>
 
         {/* Upcoming */}
         <div className="md:col-span-2 space-y-3">
 
           <div className="bg-white shadow border p-4 rounded-2xl font-bold">
-            Upcoming Drive
+            Career Activities
           </div>
 
-          {[
-            "Microsoft",
-            "AWS Workshop",
-            "Mock Interview",
-          ].map((item) => (
+          {(
+            resumeData
+              ? [
+                `${resumeData.summary.grade} Grade Candidate`,
+                `${resumeData.summary.total_skills} Skills Identified`,
+                "AI Resume Improvement",
+              ]
+              : [
+                "Microsoft",
+                "AWS Workshop",
+                "Mock Interview",
+              ]
+          ).map((item) => (
+
             <div
               key={item}
               className="bg-white p-4 rounded-2xl shadow border flex justify-between hover:bg-blue-600 hover:text-white transition cursor-pointer"

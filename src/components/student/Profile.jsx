@@ -10,86 +10,90 @@ import {
 } from "lucide-react";
 
 function Profile() {
-const [profile, setProfile] = useState(null);
-const [draft, setDraft] = useState(null);
-useEffect(() => {
-  fetchProfile();
-}, []);
+  const [profile, setProfile] = useState(null);
+  const [draft, setDraft] = useState(null);
+  useEffect(() => {
+    fetchProfile();
+  }, []);
 
-const fetchProfile = async () => {
-  try {
-    const res = await axios.get("http://localhost:5000/api/profile");
+  const fetchProfile = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/profile");
 
-    setProfile(res.data);
-    setDraft(res.data);
-    setSkills(res.data.skills || []);
-  } catch (err) {
-  console.log(err);
+      setProfile(res.data);
+      setDraft(res.data);
+      setSkills(res.data.skills || []);
+    } catch (err) {
+      console.log(err);
 
-  const localUser =
-    JSON.parse(localStorage.getItem("user")) || {};
+      const localUser =
+        JSON.parse(localStorage.getItem("user")) || {};
 
-  const fallbackProfile = {
-    name: localUser.fullName || "New User",
-    role: "Student",
-    email: localUser.email || "",
-    phone: "",
-    location: "",
-    bio: "",
-    college: "",
-    degree: "",
-    year: "",
-    cgpa: "",
-    skills: [],
+      const savedProfile =
+        JSON.parse(localStorage.getItem("profile"));
+
+      const fallbackProfile = savedProfile || {
+        name: localUser.fullName || "New User",
+        role: "Student",
+        email: localUser.email || "",
+        phone: "",
+        location: "",
+        bio: "",
+        college: "",
+        degree: "",
+        year: "",
+        cgpa: "",
+        skills: [],
+        projects: [],
+      };
+
+      setProfile(fallbackProfile);
+      setDraft(fallbackProfile);
+      setSkills(fallbackProfile.skills || []);
+    }
   };
 
-  setProfile(fallbackProfile);
-  setDraft(fallbackProfile);
-  setSkills([]);
-}
-};
-    
   const [editing, setEditing] = useState(false);
 
   const [skills, setSkills] = useState([]);
 
   const [newSkill, setNewSkill] = useState("");
 
-const handleSave = async () => {
-  const updatedDraft = {
-    ...draft,
-    skills,
-  };
+  const handleSave = async () => {
+    const updatedDraft = {
+      ...draft,
+      skills,
+    };
 
-  // Update profile instantly
-  setProfile(updatedDraft);
+    // Update profile instantly
+    setProfile(updatedDraft);
 
-  // Update draft too
-  setDraft(updatedDraft);
+    // Update draft too
+    setDraft(updatedDraft);
 
-  // Save locally
-  localStorage.setItem(
-    "profile",
-    JSON.stringify(updatedDraft)
-  );
-
-  try {
-    // Try backend save
-    await axios.put(
-      "http://localhost:5000/api/profile/update",
-      updatedDraft
+    // Save locally
+    localStorage.setItem(
+      "profile",
+      JSON.stringify(updatedDraft)
     );
-  } catch (err) {
-    console.log(err);
-  }
 
-  setEditing(false);
-};
-const handleCancel = () => {
-  setDraft(profile);
-  setSkills(profile.skills || []);
-  setEditing(false);
-};
+    try {
+      // Try backend save
+      await axios.put(
+        "http://localhost:5000/api/profile/update",
+        updatedDraft
+      );
+    } catch (err) {
+      console.log(err);
+    }
+
+    setEditing(false);
+  };
+  const handleCancel = () => {
+    setDraft(profile);
+    setSkills(profile.skills || []);
+    setEditing(false);
+  };
 
   const addSkill = () => {
     if (newSkill.trim() && !skills.includes(newSkill)) {
@@ -103,10 +107,10 @@ const handleCancel = () => {
   };
 
   if (!profile || !draft) {
-  return <div>
-    Loading profile...
-</div>
-}
+    return <div>
+      Loading profile...
+    </div>
+  }
 
   return (
     <div className="flex-1 min-h-screen bg-gray-100 p-4 sm:p-6 lg:p-8">
@@ -168,7 +172,7 @@ const handleCancel = () => {
                 <>
                   <input
                     className="w-full border p-2 rounded"
-                      placeholder="Enter your full name"
+                    placeholder="Enter your full name"
                     value={draft.name}
                     onChange={(e) =>
                       setDraft({ ...draft, name: e.target.value })
@@ -176,7 +180,7 @@ const handleCancel = () => {
                   />
                   <input
                     className="w-full border p-2 rounded"
-                      placeholder="Enter your role"
+                    placeholder="Enter your role"
                     value={draft.role}
                     onChange={(e) =>
                       setDraft({ ...draft, role: e.target.value })
@@ -209,12 +213,12 @@ const handleCancel = () => {
                   <input
                     className="w-full border p-2 rounded"
                     placeholder={
-                    field === "email"
-                    ? "Enter your email"
-                    : field === "phone"
-                    ? "Enter phone number"
-                    : "Enter your location"
-                    }                            
+                      field === "email"
+                        ? "Enter your email"
+                        : field === "phone"
+                          ? "Enter phone number"
+                          : "Enter your location"
+                    }
 
                     value={draft[field]}
                     onChange={(e) =>
@@ -241,15 +245,15 @@ const handleCancel = () => {
                 <input
                   key={field}
                   className="border p-2 rounded"
-                        placeholder={
-                          field === "college"
-                          ? "Enter college name"
-                          : field === "degree"
-                          ? "Enter degree"
-                          : field === "year"
+                  placeholder={
+                    field === "college"
+                      ? "Enter college name"
+                      : field === "degree"
+                        ? "Enter degree"
+                        : field === "year"
                           ? "Enter academic year"
                           : "Enter CGPA"
-                        }
+                  }
 
                   value={draft[field]}
                   onChange={(e) =>
@@ -259,7 +263,9 @@ const handleCancel = () => {
               ) : (
                 <div key={field}>
                   <p className="text-sm text-gray-500">{field}</p>
-                  <p className="font-medium">{profile[field]}</p>
+                  <p className="font-medium">
+                    {profile[field] || "Not added yet"}
+                  </p>
                 </div>
               )
             )}
@@ -308,120 +314,119 @@ const handleCancel = () => {
         </div>
 
         {/* PROJECTS */}
-        {/* PROJECTS */}
-<div className="bg-white rounded-xl shadow p-4 sm:p-6">
-  <div className="flex items-center justify-between mb-4">
+        <div className="bg-white rounded-xl shadow p-4 sm:p-6">
+          <div className="flex items-center justify-between mb-4">
 
-    <h3 className="font-semibold">
-      Projects
-    </h3>
+            <h3 className="font-semibold">
+              Projects
+            </h3>
 
-    {editing && (
-      <button
-        onClick={() => {
-          const updatedProjects = [
-            ...(draft.projects || []),
-            {
-              title: "",
-              description: "",
-            },
-          ];
-
-          setDraft({
-            ...draft,
-            projects: updatedProjects,
-          });
-        }}
-        className="bg-blue-600 text-white px-3 py-1 rounded text-sm"
-      >
-        Add Project
-      </button>
-    )}
-  </div>
-
-  {draft.projects?.length > 0 ? (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-
-      {draft.projects.map((project, index) => (
-        <div
-          key={index}
-          className="border p-3 rounded space-y-2"
-        >
-
-          {editing ? (
-            <>
-              <input
-                className="w-full border p-2 rounded"
-                placeholder="Project title"
-                value={project.title}
-                onChange={(e) => {
-                  const updatedProjects = [...draft.projects];
-
-                  updatedProjects[index].title =
-                    e.target.value;
-
-                  setDraft({
-                    ...draft,
-                    projects: updatedProjects,
-                  });
-                }}
-              />
-
-              <textarea
-                className="w-full border p-2 rounded"
-                placeholder="Project description"
-                value={project.description}
-                onChange={(e) => {
-                  const updatedProjects = [...draft.projects];
-
-                  updatedProjects[index].description =
-                    e.target.value;
-
-                  setDraft({
-                    ...draft,
-                    projects: updatedProjects,
-                  });
-                }}
-              />
-
+            {editing && (
               <button
                 onClick={() => {
-                  const updatedProjects =
-                    draft.projects.filter(
-                      (_, i) => i !== index
-                    );
+                  const updatedProjects = [
+                    ...(draft.projects || []),
+                    {
+                      title: "",
+                      description: "",
+                    },
+                  ];
 
                   setDraft({
                     ...draft,
                     projects: updatedProjects,
                   });
                 }}
-                className="text-red-500 text-sm"
+                className="bg-blue-600 text-white px-3 py-1 rounded text-sm"
               >
-                Remove
+                Add Project
               </button>
-            </>
-          ) : (
-            <>
-              <p className="font-semibold">
-                {project.title}
-              </p>
+            )}
+          </div>
 
-              <p className="text-sm text-gray-500">
-                {project.description}
-              </p>
-            </>
+          {draft.projects?.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+              {draft.projects.map((project, index) => (
+                <div
+                  key={index}
+                  className="border p-3 rounded space-y-2"
+                >
+
+                  {editing ? (
+                    <>
+                      <input
+                        className="w-full border p-2 rounded"
+                        placeholder="Project title"
+                        value={project.title}
+                        onChange={(e) => {
+                          const updatedProjects = [...draft.projects];
+
+                          updatedProjects[index].title =
+                            e.target.value;
+
+                          setDraft({
+                            ...draft,
+                            projects: updatedProjects,
+                          });
+                        }}
+                      />
+
+                      <textarea
+                        className="w-full border p-2 rounded"
+                        placeholder="Project description"
+                        value={project.description}
+                        onChange={(e) => {
+                          const updatedProjects = [...draft.projects];
+
+                          updatedProjects[index].description =
+                            e.target.value;
+
+                          setDraft({
+                            ...draft,
+                            projects: updatedProjects,
+                          });
+                        }}
+                      />
+
+                      <button
+                        onClick={() => {
+                          const updatedProjects =
+                            draft.projects.filter(
+                              (_, i) => i !== index
+                            );
+
+                          setDraft({
+                            ...draft,
+                            projects: updatedProjects,
+                          });
+                        }}
+                        className="text-red-500 text-sm"
+                      >
+                        Remove
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <p className="font-semibold">
+                        {project.title}
+                      </p>
+
+                      <p className="text-sm text-gray-500">
+                        {project.description}
+                      </p>
+                    </>
+                  )}
+                </div>
+              ))}
+
+            </div>
+          ) : (
+            <div className="text-gray-500 text-sm border rounded p-4 text-center">
+              No projects added yet
+            </div>
           )}
         </div>
-      ))}
-
-    </div>
-  ) : (
-    <div className="text-gray-500 text-sm border rounded p-4 text-center">
-      No projects added yet
-    </div>
-  )}
-</div>
       </div>
     </div>
   );

@@ -20,7 +20,7 @@ const Login = () => {
     student: {
       title: "Student Login",
       color: "text-blue-600",
-      ring: "focus-within:ring-blue-400", 
+      ring: "focus-within:ring-blue-400",
       gradient: "from-blue-100 via-blue-200 to-blue-300",
       iconBg: "bg-blue-100",
       icon: "👤",
@@ -28,7 +28,7 @@ const Login = () => {
     admin: {
       title: "Admin Login",
       color: "text-red-500",
-      ring: "focus-within:ring-red-400", 
+      ring: "focus-within:ring-red-400",
       gradient: "from-red-100 via-red-200 to-red-300",
       iconBg: "bg-red-100",
       icon: "🔒",
@@ -36,7 +36,7 @@ const Login = () => {
     recruiter: {
       title: "Recruiter Login",
       color: "text-green-600",
-      ring: "focus-within:ring-green-400", 
+      ring: "focus-within:ring-green-400",
       gradient: "from-green-100 via-green-200 to-green-300",
       iconBg: "bg-green-100",
       icon: "💼",
@@ -45,33 +45,33 @@ const Login = () => {
 
   const current = roleConfig[role];
 
-   const handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
- const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
- if (showSignup && !fullName) {
+    if (showSignup && !fullName) {
       alert("Please enter full name");
       return;
     }
 
-  if (!email || !password) {
-    alert("All fields are required");
-    return;
-  }
+    if (!email || !password) {
+      alert("All fields are required");
+      return;
+    }
 
-  if (!emailRegex.test(email)) {
-    alert("Please enter a valid email (e.g. example@gmail.com)");
-    return;
-  }
+    if (!emailRegex.test(email)) {
+      alert("Please enter a valid email (e.g. example@gmail.com)");
+      return;
+    }
 
-  if (password.length < 4) {
-    alert("Password must be at least 4 characters");
-    return;
-  }
+    if (password.length < 4) {
+      alert("Password must be at least 4 characters");
+      return;
+    }
 
-// Console output
- console.table({
+    // Console output
+    console.table({
       FullName: fullName,
       Email: email,
       Password: password,
@@ -79,19 +79,20 @@ const Login = () => {
       Mode: showSignup ? "Signup" : "Login",
     });
 
-// SAVE USER DATA
-const userData = {
-  fullName:
-  fullName ||
-  email
-    .split("@")[0]
-    .replace(/[0-9]/g, "")
-    .replace(/[^a-zA-Z]/g, " ")
-    .trim(),
-  email: email,
-  role: role,
-};
-localStorage.setItem("user", JSON.stringify(userData));
+    // SAVE USER DATA
+    const userData = {
+      fullName:
+        fullName ||
+        email
+          .split("@")[0]
+          .replace(/[0-9]/g, "")
+          .replace(/[^a-zA-Z]/g, " ")
+          .replace(/\s+/g, " ")
+          .trim(),
+      email: email,
+      role: role,
+    };
+    localStorage.setItem("user", JSON.stringify(userData));
 
     // SUCCESS ALERT
     alert(
@@ -100,20 +101,20 @@ localStorage.setItem("user", JSON.stringify(userData));
         : "Login successful!"
     );
 
-  if (role === "student") {
-  localStorage.setItem("role", "student");
-  navigate("/student-dashboard");
-}
+    if (role === "student") {
+      localStorage.setItem("role", "student");
+      navigate("/student-dashboard");
+    }
 
-else if (role === "recruiter") {
-  localStorage.setItem("role", "recruiter"); 
-  navigate("/recruiter-dashboard");
-}
+    else if (role === "recruiter") {
+      localStorage.setItem("role", "recruiter");
+      navigate("/recruiter-dashboard");
+    }
 
-else if (role === "admin") {
-  localStorage.setItem("role", "admin");
-  navigate("/admin-dashboard");
-}
+    else if (role === "admin") {
+      localStorage.setItem("role", "admin");
+      navigate("/admin-dashboard");
+    }
   };
 
   return (
@@ -140,7 +141,7 @@ else if (role === "admin") {
             ? "Create your new account"
             : "Welcome back! Please enter your credentials"}
         </p>
-         {showSignup && (
+        {showSignup && (
           <div
             className={`flex items-center border rounded-lg px-3 mb-4 focus-within:ring-2 ${current.ring}`}
           >
@@ -178,7 +179,7 @@ else if (role === "admin") {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-           {showPassword ? (
+          {showPassword ? (
             <EyeOff
               className="text-gray-400 w-5 cursor-pointer"
               onClick={() => setShowPassword(false)}
@@ -190,19 +191,20 @@ else if (role === "admin") {
             />
           )}
         </div>
-         {/* SUBMIT BUTTON */}
+        {/* SUBMIT BUTTON */}
         <button
-             onClick={handleSubmit}
-            style={{ backgroundColor:
+          onClick={handleSubmit}
+          style={{
+            backgroundColor:
               role === "student"
-                 ? "#4a72e0"
-                 : role === "admin"
-                 ? "#e64c4c"
-                 : "#39dc75",
-            }}
+                ? "#4a72e0"
+                : role === "admin"
+                  ? "#e64c4c"
+                  : "#39dc75",
+          }}
           className="w-full py-3 rounded-lg text-sm font-semibold text-white transition-all shadow-lg hover:opacity-90"
         >
-         {showSignup ? "Create Account" : "Login"}
+          {showSignup ? "Create Account" : "Login"}
         </button>
 
         {/* TOGGLE LOGIN/SIGNUP */}
@@ -218,7 +220,7 @@ else if (role === "admin") {
             {showSignup ? "Login" : "Sign Up"}
           </span>
         </p>
-        
+
         {/* DIVIDER */}
         <div className="my-5 text-gray-400 text-sm">or</div>
 
