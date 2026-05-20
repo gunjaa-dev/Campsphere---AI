@@ -53,14 +53,14 @@ function RecruiterDashboard() {
   /* COMPANIES DATA  */
 
   const companies = [
-    { id: 1, name: "Neural Systems", location: "Bangalore", employees: "500+", roles: 4, logo: "🤖", status: "Active" },
-    { id: 2, name: "Skyline Digital", location: "Mumbai", employees: "200+", roles: 3, logo: "☁️", status: "Active" },
-    { id: 3, name: "Microsoft", location: "Hyderabad", employees: "10,000+", roles: 6, logo: "🪟", status: "Active" },
-    { id: 4, name: 'Global Insight Corp', industry: 'Analytics / BI', location: 'Hyderabad, IN', employees: '100–200', openRoles: 2, hired: 5, logo: '📊', tier: 'Tier 2', status: 'Active' },
-    { id: 5, name: 'Fintech Labs', industry: 'FinTech', location: 'Pune, IN', employees: '50–100', openRoles: 2, hired: 3, logo: '💳', tier: 'Startup', status: 'Active' },
-    { id: 6, name: 'CloudBase', industry: 'Cloud Infrastructure', location: 'Chennai, IN', employees: '200–500', openRoles: 1, hired: 6, logo: '🌩️', tier: 'Tier 2', status: 'Inactive' },
-    { id: 7, name: 'Amazon', industry: 'E-commerce / Cloud', location: 'Bangalore, IN', employees: '10,000+', openRoles: 8, hired: 32, logo: '📦', tier: 'FAANG', status: 'Active' },
-    { id: 8, name: 'StartupX', industry: 'Consumer Tech', location: 'Delhi, IN', employees: '10–50', openRoles: 3, hired: 2, logo: '🚀', tier: 'Startup', status: 'Active' },
+    { id: 1, name: "Zscaler", location: "Mohali", employees: "500+", roles: 4, logo: "🤖", status: "Active" },
+    { id: 2, name: "Paxcom", location: "Gurgaon", employees: "200+", roles: 3, logo: "☁️", status: "Active" },
+    { id: 3, name: "Penthara", location: "Mohali", employees: "10,000+", roles: 6, logo: "🪟", status: "Active" },
+    { id: 4, name: 'SAP Labs', industry: 'Analytics / BI', location: 'Gurgaon, IN', employees: '200+', openRoles: 2, hired: 5, logo: '📊', tier: 'Tier 2', status: 'Active' },
+    { id: 5, name: 'GreyB', industry: 'FinTech', location: 'Pune, IN', employees: '50–100', openRoles: 2, hired: 3, logo: '💳', tier: 'Startup', status: 'Active' },
+    { id: 6, name: 'STmicroelectronics', industry: 'Microchips Infrastructure', location: 'Noida, IN', employees: '500', openRoles: 1, hired: 6, logo: '🌩️', tier: 'Tier 2', status: 'Inactive' },
+    { id: 7, name: 'Infosys', industry: ' Cloud', location: 'Bangalore, IN', employees: '10,000+', openRoles: 8, hired: 32, logo: '📦', tier: 'FAANG', status: 'Active' },
+    { id: 8, name: 'Prodesk', industry: 'Consumer Tech', location: 'Delhi, IN', employees: '10–50', openRoles: 3, hired: 2, logo: '🚀', tier: 'Startup', status: 'Active' },
 
   ];
 
@@ -165,10 +165,10 @@ function RecruiterDashboard() {
               {/* STATS */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
-                <StatCard title="Total Applications" value="1,284" extra="+12%" />
-                <StatCard title="Pending Shortlists" value="42" extra="5 New" />
+                <StatCard title="Total Applications" value="584" extra="+12%" />
+                <StatCard title="Pending Shortlists" value="12" extra="5 New" />
                 <StatCard title="Active Job Postings" value="18" />
-                <StatCard title="Selection Rate" value="24.5%" extra="+3%" />
+                <StatCard title="Selection Rate" value="94.5%" extra="+3%" />
 
               </div>
 
@@ -195,10 +195,10 @@ function RecruiterDashboard() {
                       </thead>
 
                       <tbody>
-                        <Row title="Senior Software Engineer" apps="142" />
-                        <Row title="Product Marketing Manager" apps="89" />
-                        <Row title="UX Designer" apps="312" status="Closed" />
-                        <Row title="Data Scientist" apps="56" />
+                        <Row title=" Software Engineer Intern" apps="42" />
+                        <Row title="Grad Trainee" apps="9" />
+                        <Row title="UX Designer Intern" apps="12" status="Closed" />
+                        <Row title="Data Scientist Intern" apps="6" />
                       </tbody>
                     </table>
                   </div>
@@ -209,15 +209,15 @@ function RecruiterDashboard() {
 
                   <Card title="Interviews">
                     <div className="space-y-3">
-                      <Item text="Alex Rivera - 10:30 AM" />
-                      <Item text="Jamie Chen - 02:00 PM" />
+                      <Item text="Gaurav Sharma - 10:30 AM" />
+                      <Item text="Parth Rana - 02:00 PM" />
                     </div>
                   </Card>
 
                   <Card title="Top Candidates">
-                    <Item text="Morgan Vance - 98%" />
-                    <Item text="Elara Smith - 95%" />
-                    <Item text="Daniel Bae - 92%" />
+                    <Item text="Mehak Arora - 98%" />
+                    <Item text="Ahnis Singh - 95%" />
+                    <Item text="Palak - 92%" />
                   </Card>
 
                 </div>

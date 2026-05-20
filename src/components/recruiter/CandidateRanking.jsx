@@ -14,14 +14,14 @@ import {
 
 
 const candidates = [
-  { id: 1, name: "Morgan Vance", initials: "MV", role: "Cloud Architecture", college: "IIT Delhi", skills: ["AWS", "Kubernetes", "Python"], score: 98, status: "Shortlisted", email: "morgan@college.edu", cgpa: "9.2" },
-  { id: 2, name: "Elara Smith", initials: "ES", role: "Full Stack Developer", college: "BITS Pilani", skills: ["React", "Node.js", "PostgreSQL"], score: 95, status: "Offered", email: "elara@college.edu", cgpa: "8.9" },
-  { id: 3, name: "Daniel Bae", initials: "DB", role: "Product Designer", college: "NIT Trichy", skills: ["Figma", "UX Research"], score: 92, status: "Under Review", email: "daniel@college.edu", cgpa: "8.7" },
-  { id: 4, name: "Alex Rivera", initials: "AR", role: "Data Scientist", college: "IIT Bombay", skills: ["Python", "ML"], score: 90, status: "Shortlisted", email: "alex@college.edu", cgpa: "9.0" },
-  { id: 5, name: 'Jamie Chen',    initials: 'JC', role: 'Backend Engineer',      college: 'VIT Vellore',        skills: ['Java', 'Spring Boot', 'MySQL'],      score: 87, status: 'Under Review', email: 'jamie@college.edu',  cgpa: '8.5' },
-  { id: 6, name: 'Priya Mehta',   initials: 'PM', role: 'ML Engineer',           college: 'IIT Madras',         skills: ['PyTorch', 'NLP', 'Python'],          score: 85, status: 'Shortlisted',  email: 'priya@college.edu',  cgpa: '9.1' },
-  { id: 7, name: 'Sam Wilson',    initials: 'SW', role: 'DevOps Engineer',       college: 'IIIT Hyderabad',     skills: ['Docker', 'CI/CD', 'Terraform'],      score: 82, status: 'Rejected',     email: 'sam@college.edu',    cgpa: '8.2' },
-  { id: 8, name: 'Nina Ross',     initials: 'NR', role: 'Frontend Developer',   college: 'Manipal University', skills: ['React', 'TypeScript', 'CSS'],        score: 80, status: 'Under Review', email: 'nina@college.edu',   cgpa: '8.6' },
+  { id: 1, name: "Anjali Sahni", initials: "AS", role: "ML Architecture", college: "DAVIET", skills: ["AWS", "Kubernetes", "Python"], score: 95, status: "Shortlisted", email: "anjali@college.edu", cgpa: "8.2" },
+  { id: 2, name: "Arushi Sharma", initials: "AS", role: "AI/ML Developer", college: "DAVIET", skills: ["AI/ML", "Node.js", "PostgreSQL"], score: 95, status: "Offered", email: "arushi@college.edu", cgpa: "8.4" },
+  { id: 3, name: "Arpit Miglani", initials: "AM", role: "Product Designer", college: "DAVIET", skills: ["Figma", "UX Research"], score: 90, status: "Under Review", email: "arpit@college.edu", cgpa: "8.7" },
+  { id: 4, name: "Gunjaa", initials: "GK", role: "Data Scientist", college: "DAVIET", skills: ["Python", "ML"], score: 90, status: "Shortlisted", email: "alex@college.edu", cgpa: "9.0" },
+  { id: 5, name: 'Anita Rani',    initials: 'AR', role: 'Backend Engineer', college: 'DAVIET',        skills: ['Java', 'Spring Boot', 'MySQL'], score: 87, status: 'Under Review', email: 'jamie@college.edu',  cgpa: '8.5' },
+  { id: 6, name: 'Kashvi Malhotra',   initials: 'KM', role: 'Cybersecurity Engineer', college: 'DAVIET',         skills: ['PyTorch', 'NLP', 'Python'],   score: 85, status: 'Shortlisted',  email: 'priya@college.edu',  cgpa: '9.1' },
+  { id: 7, name: 'Mansvi Salhotra',    initials: 'MS', role: 'DevOps Engineer', college: 'DAVIET',     skills: ['Docker', 'CI/CD', 'Terraform'],      score: 82, status: 'Rejected',     email: 'sam@college.edu',    cgpa: '8.2' },
+  { id: 8, name: 'Bhavya Verma',     initials: 'BV', role: 'Frontend Developer',college: 'DAVIET', skills: ['React', 'TypeScript', 'CSS'],        score: 80, status: 'Under Review', email: 'nina@college.edu',   cgpa: '8.6' },
 ];
 
 const statusStyle = {
