@@ -12,3 +12,13 @@ nltk==3.8.1
 regex==2023.12.25
 pydantic==2.6.0
 requests==2.31.0
+
+# Multi-format text extraction + OCR
+PyMuPDF==1.23.26
+pdfminer.six==20231228
+pdf2image==1.17.0
+pytesseract==0.3.10
+easyocr==1.7.1
+opencv-python-headless==4.9.0.80
+Pillow==10.2.0
+textract==1.6.5

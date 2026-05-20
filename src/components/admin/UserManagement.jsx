@@ -15,22 +15,22 @@ import {
 const usersData = [
   {
     id: 1,
-    initials: "MA",
-    name: "Mehak Arora",
+    initials: "SP",
+    name: "Sneha Pillai",
     role: "Student",
-    email: "mekah01@daviet.edu",
+    email: "sneha@college.edu",
     status: "Active",
     joined: "Aug 2022",
     color: "bg-pink-100 text-pink-700",
   },
   {
     id: 2,
-    initials: "AS",
-    name: "Ahnis Singh",
+    initials: "VK",
+    name: "Vikash Kumar",
     role: "Student",
-    email: "ahnis21@daviet.edu",
+    email: "vikash@college.edu",
     status: "Pending",
-    joined: "Aug 2022",
+    joined: "Jan 2023",
     color: "bg-yellow-100 text-yellow-700",
   },
   {
@@ -45,12 +45,12 @@ const usersData = [
   },
   {
     id: 4,
-    initials: "VK",
-    name: "Dr Vishav Kapoor",
+    initials: "AR",
+    name: "Arun Kumar",
     role: "Admin",
-    email: "vishavkapoor@daviet.org",
-    status: "Active",
-    joined: "Jun 2002",
+    email: "arun@admin.edu",
+    status: "Blocked",
+    joined: "Jun 2021",
     color: "bg-green-100 text-green-700",
   },
 ];
@@ -127,7 +127,7 @@ function UserManagement() {
 
   return (
     <div className=" w-full min-h-screen bg-[#f5f7fb] ">
-      <div className="w-full  p-4 md:p-6 space-y-6 min-w-0">
+  <div className="w-full  p-4 md:p-6 space-y-6 min-w-0">
 
 
         {/* HEADER */}
@@ -206,10 +206,11 @@ function UserManagement() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-5 py-2 rounded-xl text-sm font-medium transition ${activeTab === tab
+                className={`px-5 py-2 rounded-xl text-sm font-medium transition ${
+                  activeTab === tab
                     ? "bg-white shadow text-black"
                     : "text-gray-600"
-                  }`}
+                }`}
               >
                 {tab}
               </button>

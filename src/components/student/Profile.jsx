@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { getStudentProfile } from "../../api/camspherApi";
 import axios from "axios";
-import { useState } from "react";
+
 import {
   Camera,
   GraduationCap,

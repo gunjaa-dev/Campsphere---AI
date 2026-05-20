@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { usePlacement } from "../context/PlacementContext";
+import { getStudentProfile } from "../../api/camspherApi";
 import {
   RadarChart,
   PolarGrid,
@@ -47,172 +49,77 @@ const ReadinessChart = ({ value }) => (
 function ReadinessScore() {
   const navigate = useNavigate();
 
-  const user =
-    JSON.parse(localStorage.getItem("user")) || {};
-  const savedProfile =
-    JSON.parse(localStorage.getItem("profile")) || {};
-  const [showNotifications, setShowNotifications] =
-    useState(false);
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const savedProfile = getStudentProfile();
+  const { readiness, prediction, resumeData } = usePlacement();
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
-  const [showSettings, setShowSettings] =
-    useState(false);
-
-  /* DATA */
-  const radarData = [
-    {
-      skill: "Skills",
-      score: Math.min(
-        (savedProfile.skills?.length || 0) * 15,
-        100
-      ),
-    },
-
-    {
-      skill: "Projects",
-      score: Math.min(
-        (savedProfile.projects?.length || 0) * 20,
-        100
-      ),
-    },
-
-    {
-      skill: "Academics",
-      score: (savedProfile.cgpa || 0) * 10,
-    },
-
-    {
-      skill: "Profile",
-      score: savedProfile.bio ? 85 : 40,
-    },
-
-    {
-      skill: "Experience",
-      score:
-        savedProfile.projects?.length > 2
-          ? 90
-          : 50,
-    },
-  ];
-
-  const categoryScores = [
-    {
-      label: "Technical Skills",
-      score: Math.min(
-        (savedProfile.skills?.length || 0) * 15,
-        100
-      ),
-      icon: Zap,
-    },
-
-    {
-      label: "Academic Performance",
-      score: (savedProfile.cgpa || 0) * 10,
-      icon: BookOpen,
-    },
-
-    {
-      label: "Project Experience",
-      score: Math.min(
-        (savedProfile.projects?.length || 0) * 20,
-        100
-      ),
-      icon: Target,
-    },
-
-    {
-      label: "Profile Completion",
-      score: savedProfile.bio ? 90 : 40,
-      icon: TrendingUp,
-    },
-  ];
-
-  const improvements = [
-    {
-      text: savedProfile.skills?.length
-        ? "Add more advanced skills"
-        : "Add your first skill",
-      done: savedProfile.skills?.length >= 3,
-    },
-
-    {
-      text: savedProfile.projects?.length
-        ? "Improve project portfolio"
-        : "Add your first project",
-      done: savedProfile.projects?.length >= 2,
-    },
-
-    {
-      text: savedProfile.cgpa
-        ? "Maintain academic consistency"
-        : "Add your CGPA",
-      done: savedProfile.cgpa >= 8,
-    },
-
-    {
-      text: savedProfile.bio
-        ? "Profile description completed"
-        : "Complete profile bio",
-      done: !!savedProfile.bio,
-    },
-  ];
-
-  const tierData = [
-    {
-      tier: "Startups",
-      match: Math.min(
-        50 +
-        (savedProfile.projects?.length || 0) * 10,
-        100
-      ),
-    },
-
-    {
-      tier: "MNCs",
-      match: Math.min(
-        40 +
-        (savedProfile.skills?.length || 0) * 10,
-        100
-      ),
-    },
-
-    {
-      tier: "Tier 1",
-      match: Math.min(
-        (savedProfile.cgpa || 0) * 10,
-        100
-      ),
-    },
-
-    {
-      tier: "FAANG",
-      match: Math.min(
-        ((savedProfile.cgpa || 0) * 8) +
-        (savedProfile.projects?.length || 0) * 10,
-        100
-      ),
-    },
-  ];
-
-  const [tasks, setTasks] = useState(improvements);
-
-  const toggle = (i) => {
-    setTasks((prev) =>
-      prev.map((t, idx) =>
-        idx === i ? { ...t, done: !t.done } : t
-      )
-    );
-  };
-
-  const completed = tasks.filter((t) => t.done).length;
-  const score = Math.min(
+  const components = readiness?.component_scores || {};
+  const fallbackScore = Math.min(
     Math.round(
-      ((savedProfile.skills?.length || 0) * 15) +
-      ((savedProfile.projects?.length || 0) * 20) +
-      ((savedProfile.cgpa || 0) * 5) +
+      (savedProfile.skills?.length || 0) * 15 +
+      (savedProfile.projects?.length || 0) * 20 +
+      (parseFloat(savedProfile.cgpa) || 0) * 5 +
       (savedProfile.bio ? 10 : 0)
     ),
     100
   );
+  const score = Math.round(readiness?.readiness_score ?? fallbackScore);
+
+  const radarData = useMemo(
+    () => [
+      { skill: "Resume", score: components.resume_quality?.score ?? (resumeData?.summary?.overall_score || 40) },
+      { skill: "Skills", score: components.skills_strength?.score ?? Math.min((savedProfile.skills?.length || 0) * 15, 100) },
+      { skill: "Academics", score: components.academic_score?.score ?? (parseFloat(savedProfile.cgpa) || 0) * 10 },
+      { skill: "Job Fit", score: components.job_market_fit?.score ?? 50 },
+      { skill: "Placement", score: components.selection_odds?.score ?? prediction?.selection_probability ?? 50 },
+    ],
+    [components, resumeData, savedProfile, prediction]
+  );
+
+  const categoryScores = [
+    { label: "Resume Quality", score: Math.round(components.resume_quality?.score ?? 0), icon: Zap },
+    { label: "Skills Strength", score: Math.round(components.skills_strength?.score ?? 0), icon: Target },
+    { label: "Academic Score", score: Math.round(components.academic_score?.score ?? 0), icon: BookOpen },
+    { label: "Selection Odds", score: Math.round(components.selection_odds?.score ?? prediction?.selection_probability ?? 0), icon: TrendingUp },
+  ];
+
+  const actionPlan = readiness?.action_plan || [];
+  const improvements = actionPlan.length
+    ? actionPlan.slice(0, 6).map((item) => ({
+        text: item.action || item.title || item.description,
+        done: item.priority === "completed",
+      }))
+    : [
+        { text: "Upload resume on Dashboard", done: !!resumeData },
+        { text: "Add CGPA in Profile", done: !!savedProfile.cgpa },
+        { text: "Complete 3+ projects", done: (savedProfile.projects?.length || 0) >= 3 },
+      ];
+
+  const tierData = useMemo(() => {
+    const tiers = readiness?.company_tiers;
+    if (tiers && typeof tiers === "object") {
+      return Object.entries(tiers).map(([tier, match]) => ({
+        tier: tier.replace(/_/g, " "),
+        match: typeof match === "number" ? Math.round(match) : Math.round(match?.match_score ?? 0),
+      }));
+    }
+    return [
+      { tier: "Startups", match: Math.min(50 + (savedProfile.projects?.length || 0) * 10, 100) },
+      { tier: "MNCs", match: Math.min(40 + (savedProfile.skills?.length || 0) * 10, 100) },
+      { tier: "Tier 1", match: Math.min((parseFloat(savedProfile.cgpa) || 0) * 10, 100) },
+      { tier: "FAANG", match: Math.min((parseFloat(savedProfile.cgpa) || 0) * 8 + (savedProfile.projects?.length || 0) * 10, 100) },
+    ];
+  }, [readiness, savedProfile]);
+
+  const [tasks, setTasks] = useState(improvements);
+  const toggle = (i) => {
+    setTasks((prev) =>
+      prev.map((t, idx) => (idx === i ? { ...t, done: !t.done } : t))
+    );
+  };
+  const completed = tasks.filter((t) => t.done).length;
   const notifications = [
 
     savedProfile.skills?.length
@@ -348,8 +255,13 @@ function ReadinessScore() {
         <div className="bg-white rounded-xl border shadow p-4 sm:p-6 flex flex-col lg:flex-row gap-6">
           <div className="flex flex-col items-center justify-center min-w-[120px]">
             <ReadinessChart value={score} />
-            <div className="mt-2">
-              <Badge>AI Verified</Badge>
+            <div className="mt-2 flex flex-col items-center gap-1">
+              <Badge>{readiness?.readiness_grade || "Profile"}</Badge>
+              {prediction?.selection_probability != null && (
+                <span className="text-xs text-gray-500">
+                  {Math.round(prediction.selection_probability)}% placement odds
+                </span>
+              )}
             </div>
           </div>
 
@@ -358,13 +270,12 @@ function ReadinessScore() {
               <h2 className="font-bold text-lg">
                 Your Profile is{" "}
                 <span className="text-blue-600">
-                  {
-                    score >= 80
+                  {readiness?.readiness_level ||
+                    (score >= 80
                       ? "Highly Competitive"
                       : score >= 60
                         ? "Placement Ready"
-                        : "Needs Improvement"
-                  }
+                        : "Needs Improvement")}
                 </span>
               </h2>
               <p className="text-sm text-gray-500">

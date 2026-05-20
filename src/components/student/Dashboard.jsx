@@ -8,7 +8,20 @@ import {
   Bell,
   Settings,
   Upload,
+  AlertCircle,
 } from "lucide-react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+} from "recharts";
+import { usePlacement } from "../context/PlacementContext";
+import toast from "react-hot-toast";
 
 /* Badge */
 const Badge = ({ children, className = "" }) => (
@@ -38,15 +51,31 @@ const ReadinessChart = ({ value }) => (
 
 function Dashboard() {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
   const savedProfile =
-    JSON.parse(localStorage.getItem("profile")) || {};
-  const readiness =
-    (savedProfile.skills?.length || 0) * 10 +
-    (savedProfile.projects?.length || 0) * 15;
-  const [loading, setLoading] = useState(false);
+    JSON.parse(localStorage.getItem("profile") || "{}");
 
-  const [resumeData, setResumeData] = useState(null);
+  const {
+    resumeData,
+    jobData,
+    prediction,
+    readiness,
+    loading,
+    error,
+    progress,
+    runPipeline,
+    getAtsScore,
+  } = usePlacement();
+
+  const readinessScore = readiness?.readiness_score ?? Math.min(
+    (savedProfile.skills?.length || 0) * 10 +
+    (savedProfile.projects?.length || 0) * 15,
+    100
+  );
+
+  const atsScore = getAtsScore();
+  const placementProb = prediction?.selection_probability;
+
   const dynamicSkills = resumeData
     ? resumeData.analysis.skills.found_skills
       .slice(0, 5)
@@ -69,12 +98,25 @@ function Dashboard() {
       },
     ];
 
+  const scoreChartData = resumeData?.analysis?.scoring?.category_scores
+    ? Object.entries(resumeData.analysis.scoring.category_scores).map(
+        ([key, value]) => ({
+          name: key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+          score: Math.round(value),
+        })
+      )
+    : [];
+
   const notifications = [
-
     resumeData
-      ? `Resume score: ${resumeData.summary.overall_score}`
+      ? `Resume score: ${resumeData.summary.overall_score}/100`
       : "Upload resume for AI analysis",
-
+    atsScore != null
+      ? `ATS compatibility: ${Math.round(atsScore)}%`
+      : "ATS score available after upload",
+    placementProb != null
+      ? `Placement probability: ${Math.round(placementProb)}%`
+      : "Run pipeline for placement prediction",
     resumeData
       ? `${resumeData.summary.total_skills} AI skills detected`
       : "No resume analyzed yet",
@@ -87,13 +129,17 @@ function Dashboard() {
       ? `${savedProfile.skills.length} profile skills updated`
       : "Add skills to improve recommendations",
 
-    readiness >= 80
+    readinessScore >= 80
       ? "You are placement ready"
       : "Improve profile to increase readiness",
+    jobData?.total_jobs_matched
+      ? `${jobData.total_jobs_matched} jobs matched your profile`
+      : "Upload resume for job recommendations",
   ];
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const fileInputRef = useRef();
+  const [dragOver, setDragOver] = useState(false);
 
   const { pathname } = useLocation();
 
@@ -120,43 +166,28 @@ function Dashboard() {
     fileInputRef.current.click();
   };
 
-  /* Resume Upload + Analysis */
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
-
     if (!file) return;
 
+    const ext = file.name.split(".").pop()?.toLowerCase();
+    const allowed = ["pdf", "doc", "docx", "jpg", "jpeg", "png", "webp", "bmp", "tif", "tiff"];
+    if (!allowed.includes(ext)) {
+      toast.error("Supported: PDF, DOC, DOCX, JPG, PNG, WEBP");
+      return;
+    }
+
+    if (!savedProfile.cgpa) {
+      toast.error("Add your CGPA in Profile first for accurate predictions");
+    }
+
     try {
-      setLoading(true);
-
-      const formData = new FormData();
-
-      formData.append("file", file);
-
-      const response = await fetch(
-        "http://127.0.0.1:8000/api/analyze/file",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      const data = await response.json();
-
-      console.log("Resume Analysis:", data);
-
-      if (data.success) {
-        setResumeData(data);
-
-        alert("Resume analyzed successfully!");
-      } else {
-        alert("Analysis failed");
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Server Error");
+      await runPipeline(file);
+      toast.success("Full AI analysis complete!");
+    } catch (err) {
+      toast.error(err.message || "Analysis failed. Is the backend running?");
     } finally {
-      setLoading(false);
+      e.target.value = "";
     }
   };
 
@@ -281,34 +312,113 @@ function Dashboard() {
           </p>
         </div>
 
-        {/* Upload Resume */}
-        <>
+        <div
+          className={`flex flex-col sm:flex-row items-stretch sm:items-center gap-3 border-2 border-dashed rounded-xl p-4 transition ${
+            dragOver ? "border-blue-500 bg-blue-50" : "border-gray-200 bg-white"
+          }`}
+          onDragOver={(e) => {
+            e.preventDefault();
+            setDragOver(true);
+          }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={(e) => {
+            e.preventDefault();
+            setDragOver(false);
+            const f = e.dataTransfer.files?.[0];
+            if (f) handleFileChange({ target: { files: [f] } });
+          }}
+        >
           <input
             type="file"
-            accept=".pdf,.doc,.docx"
+            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp,.bmp,.tif,.tiff,image/*"
             ref={fileInputRef}
             className="hidden"
             onChange={handleFileChange}
           />
-
+          <p className="text-sm text-gray-500 flex-1">
+            Drop resume here or browse — PDF, scanned PDF, DOC, DOCX, JPG, PNG, WEBP
+          </p>
           <Button
             onClick={handleButtonClick}
-            className="!bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 font-medium flex items-center gap-2"
+            disabled={loading}
+            className="!bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white px-5 py-3 font-medium flex items-center gap-2 shrink-0"
           >
             <Upload size={18} />
-
-            {loading ? "Analyzing..." : "Upload Resume"}
+            {loading ? progress.message || "Processing…" : "Upload Resume"}
           </Button>
-        </>
+        </div>
       </div>
+
+      {loading && (
+        <div className="bg-white rounded-2xl border p-4 shadow-sm">
+          <div className="flex justify-between text-sm mb-2">
+            <span className="text-gray-600">{progress.message || "Processing…"}</span>
+            <span className="font-semibold text-blue-600">{progress.percent}%</span>
+          </div>
+          <div className="bg-gray-200 h-2 rounded-full overflow-hidden">
+            <div
+              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+              style={{ width: `${progress.percent}%` }}
+            />
+          </div>
+        </div>
+      )}
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-4 flex gap-3 text-red-700 text-sm">
+          <AlertCircle size={20} className="shrink-0" />
+          <div>
+            <p className="font-semibold">Analysis error</p>
+            <p>{error}</p>
+            <p className="mt-1 opacity-80 text-xs">
+              Run backend in a second terminal:{" "}
+              <code className="bg-red-100 px-1 rounded">
+                cd backend/resume_analyzer && python main.py
+              </code>
+              <br />
+              Then verify:{" "}
+              <a
+                href="http://127.0.0.1:8000/docs"
+                target="_blank"
+                rel="noreferrer"
+                className="underline"
+              >
+                http://127.0.0.1:8000/docs
+              </a>
+            </p>
+          </div>
+        </div>
+      )}
+
+      {resumeData && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { label: "Resume Score", value: resumeData.summary.overall_score, color: "text-blue-600" },
+            { label: "ATS Score", value: atsScore != null ? Math.round(atsScore) : "—", color: "text-emerald-600" },
+            { label: "Placement Odds", value: placementProb != null ? `${Math.round(placementProb)}%` : "—", color: "text-violet-600" },
+            { label: "Readiness", value: readiness?.readiness_score != null ? Math.round(readiness.readiness_score) : "—", color: "text-indigo-600" },
+          ].map((card) => (
+            <div key={card.label} className="bg-white rounded-2xl border p-4 shadow-sm">
+              <p className="text-xs text-gray-500 uppercase">{card.label}</p>
+              <p className={`text-3xl font-bold mt-1 ${card.color}`}>{card.value}</p>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Resume Analysis Result */}
       {resumeData && (
         <div className="bg-white rounded-2xl shadow border p-6">
 
-          <h2 className="text-2xl font-bold mb-5">
-            Resume Analysis
-          </h2>
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-5">
+            <h2 className="text-2xl font-bold">Resume Analysis</h2>
+            {resumeData.extraction && (
+              <span className="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">
+                {resumeData.extraction.extraction_method_used} ·{" "}
+                {resumeData.extraction.confidence_score}% confidence
+              </span>
+            )}
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
 
@@ -377,6 +487,27 @@ function Dashboard() {
             </div>
           </div>
 
+          {scoreChartData.length > 0 && (
+            <div className="mt-6">
+              <h3 className="font-semibold text-lg mb-3">Score Breakdown</h3>
+              <div className="h-56 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={scoreChartData} layout="vertical">
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis type="number" domain={[0, 100]} />
+                    <YAxis dataKey="name" type="category" width={120} tick={{ fontSize: 11 }} />
+                    <Tooltip />
+                    <Bar dataKey="score" radius={[0, 4, 4, 0]}>
+                      {scoreChartData.map((_, i) => (
+                        <Cell key={i} fill={i % 2 === 0 ? "#2563eb" : "#6366f1"} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          )}
+
           {/* Recommendations */}
           <div className="mt-6">
 
@@ -408,7 +539,7 @@ function Dashboard() {
         {/* Readiness */}
         <div className="bg-white rounded-2xl p-5 shadow border flex flex-col items-center">
 
-          <ReadinessChart value={Math.min(readiness, 100)} />
+          <ReadinessChart value={Math.min(Math.round(readinessScore), 100)} />
 
           <h3 className="mt-3 font-semibold">
             Readiness Score

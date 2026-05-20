@@ -26,20 +26,37 @@ class ResumeAnalyzer:
         self.content_extractor = ContentExtractor()
         self.scoring_engine = ResumeScoringEngine()
 
-    def analyze_file(self, file_content: bytes, filename: str) -> Dict:
+    def analyze_file(
+        self,
+        file_content: bytes,
+        filename: str,
+        content_type: Optional[str] = None,
+    ) -> Dict:
         """
-        Analyze a resume file (PDF or DOCX).
+        Analyze a resume file (PDF, DOCX, DOC, or image).
 
         Args:
             file_content: Raw bytes of the file
-            filename: Name with extension (.pdf, .docx)
+            filename: Name with extension
+            content_type: Optional MIME type from upload
 
         Returns:
-            Complete analysis result with scores
+            Complete analysis result with scores + extraction metadata
         """
-        # Step 1: Extract text
-        raw_text = self.text_extractor.extract(file_content, filename)
-        return self._analyze_text(raw_text)
+        extraction = self.text_extractor.extract_with_metadata(
+            file_content, filename, content_type
+        )
+        raw_text = extraction["cleaned_text"]
+        result = self._analyze_text(raw_text)
+        result["extraction"] = {
+            "raw_text_length": len(extraction.get("raw_text", "")),
+            "cleaned_text_length": extraction.get("character_count", len(raw_text)),
+            "extraction_method_used": extraction.get("extraction_method_used"),
+            "confidence_score": extraction.get("confidence_score"),
+            "file_type_detected": extraction.get("file_type_detected"),
+            "warnings": extraction.get("warnings", []),
+        }
+        return result
 
     def analyze_text(self, text: str) -> Dict:
         """
@@ -102,13 +119,19 @@ class ResumeAnalyzer:
             }
         }
 
-    def analyze(self, input_data: Union[str, bytes], filename: Optional[str] = None) -> Dict:
+    def analyze(
+        self,
+        input_data: Union[str, bytes],
+        filename: Optional[str] = None,
+        content_type: Optional[str] = None,
+    ) -> Dict:
         """
         Universal analyze method - accepts file bytes or text.
 
         Args:
             input_data: Either file bytes or text string
             filename: Required if input_data is bytes
+            content_type: Optional MIME type for file bytes
 
         Returns:
             Complete analysis result
@@ -117,7 +140,7 @@ class ResumeAnalyzer:
             if not filename:
                 raise ValueError("filename is required when input_data is bytes")
             self._last_filename = filename
-            return self.analyze_file(input_data, filename)
+            return self.analyze_file(input_data, filename, content_type)
         else:
             self._last_filename = filename or "text_input"
             return self.analyze_text(str(input_data))

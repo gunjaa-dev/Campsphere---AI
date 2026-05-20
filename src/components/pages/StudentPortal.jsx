@@ -6,9 +6,11 @@ import JobRecommendation from "../student/JobRecommendation";
 import ReadinessScore from "../student/ReadinessScore";
 import Profile from "../student/Profile";
 import Sidebar from "../common/Sidebar";
+import { PlacementProvider } from "../context/PlacementContext";
 
 function StudentPortal() {
   return (
+    <PlacementProvider>
     <div className="flex h-screen w-screen overflow-hidden">
 
       <Sidebar />
@@ -24,6 +26,7 @@ function StudentPortal() {
 
       </div>
     </div>
+    </PlacementProvider>
   );
 }
 
