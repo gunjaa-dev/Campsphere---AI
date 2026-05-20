@@ -94,7 +94,7 @@ const PlacementStats = () => (
 const TopBranches = () => {
   const branches = [
     { name: "Computer Science", value: 94 },
-    { name: "Information Technology", value: 88 },
+    { name: "Computer Science AI/ML", value: 88 },
     { name: "Electronics & Comm.", value: 76 },
     { name: "Mechanical Engg.", value: 61 },
   ];
@@ -137,8 +137,8 @@ const TopBranches = () => {
 
 const companies = [
   {
-    name: "TechCorp Global",
-    offers: 124,
+    name: "Zscaler",
+    offers: 24,
     package: "14.2 LPA",
     conversion: 75,
     trend: "up",
@@ -153,17 +153,17 @@ const companies = [
     status: "Pending",
   },
   {
-    name: "Quantum Systems",
-    offers: 42,
-    package: "22.0 LPA",
+    name: "Paxcom",
+    offers: 22,
+    package: "12.0 LPA",
     conversion: 92,
     trend: "up",
     status: "Ready",
   },
   {
-    name: "InfoEdge Ventures",
-    offers: 67,
-    package: "11.3 LPA",
+    name: "Penthara",
+    offers: 7,
+    package: "10.3 LPA",
     conversion: 58,
     trend: "down",
     status: "Pending",
