@@ -12,12 +12,12 @@ import {
 } from "lucide-react";
 
 const initialJobs = [
-  { id: 1, title: "Senior Software Engineer", dept: "Engineering", type: "Full-time", location: "Bangalore, IN", applicants: 142, date: "Oct 24, 2023", status: "LIVE", description: "Build scalable backend systems and lead a team of 3." },
-  { id: 2, title: "Product Marketing Manager", dept: "Marketing", type: "Contract", location: "Mumbai, IN", applicants: 89, date: "Oct 22, 2023", status: "LIVE", description: "Drive go-to-market strategy for new product launches." },
-  { id: 3, title: "UX Designer (Junior)", dept: "Design", type: "Internship", location: "Remote", applicants: 312, date: "Oct 15, 2023", status: "CLOSED", description: "Create user-centered designs." },
-  { id: 4, title: "Data Scientist", dept: "Analytics", type: "Full-time", location: "Hyderabad, IN", applicants: 56, date: "Oct 12, 2023", status: "LIVE", description: "Build ML models." },
-  { id: 5, title: "Backend Engineer", dept: "Engineering", type: "Full-time", location: "Pune, IN", applicants: 98, date: "Oct 10, 2023", status: "LIVE", description: "Develop APIs." },
-  { id: 6, title: "Sales Executive", dept: "Sales", type: "Full-time", location: "Delhi, IN", applicants: 23, date: "Oct 8, 2023", status: "DRAFT", description: "Manage clients." },
+  { id: 1, title: "Grad Trainee", dept: "Engineering", type: "Internship", location: "Bangalore, IN", applicants: 142, date: "Oct 24, 2026", status: "LIVE", description: "Build scalable backend systems and lead a team of 3." },
+  { id: 2, title: "SDE Intern", dept: "Engineering", type: "Internship", location: "Mumbai, IN", applicants: 89, date: "Oct 22, 2026", status: "LIVE", description: "Develop software solutions." },
+  { id: 3, title: "UX Designer (Junior) Intern", dept: "Design", type: "Internship", location: "Remote", applicants: 312, date: "Oct 15, 2026", status: "LIVE", description: "Create user-centered designs." },
+  { id: 4, title: "Data Scientist Intern", dept: "Analytics", type: "Internship", location: "Hyderabad, IN", applicants: 56, date: "Oct 12, 2026", status: "LIVE", description: "Build ML models." },
+  { id: 5, title: "Backend Engineer Intern", dept: "Engineering", type: "Internship", location: "Pune, IN", applicants: 98, date: "Oct 10, 2026", status: "LIVE", description: "Develop APIs." },
+  { id: 6, title: "Python Developer Intern", dept: "Development", type: "Internship", location: "Delhi, IN", applicants: 23, date: "Oct 8, 2026", status: "DRAFT", description: "Develop Python applications." },
 ];
 
 const statusStyle = {

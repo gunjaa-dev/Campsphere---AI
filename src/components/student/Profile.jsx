@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { getStudentProfile } from "../../api/camspherApi";
+import axios from "axios";
+
 import {
   Camera,
   GraduationCap,
@@ -16,28 +18,40 @@ function Profile() {
   }, []);
 
   const fetchProfile = async () => {
-    const localUser = JSON.parse(localStorage.getItem("user") || "{}");
-    const savedProfile = getStudentProfile();
+    try {
+      const res = await axios.get("http://localhost:5000/api/profile");
 
-    const fallbackProfile = {
-      name: savedProfile.name || localUser.fullName || "New User",
-      role: savedProfile.role || "Student",
-      email: savedProfile.email || localUser.email || "",
-      phone: savedProfile.phone || "",
-      location: savedProfile.location || "",
-      bio: savedProfile.bio || "",
-      college: savedProfile.college || "",
-      degree: savedProfile.degree || "",
-      branch: savedProfile.branch || "",
-      year: savedProfile.year || "",
-      cgpa: savedProfile.cgpa || "",
-      skills: savedProfile.skills || [],
-      projects: savedProfile.projects || [],
-    };
+      setProfile(res.data);
+      setDraft(res.data);
+      setSkills(res.data.skills || []);
+    } catch (err) {
+      console.log(err);
 
-    setProfile(fallbackProfile);
-    setDraft(fallbackProfile);
-    setSkills(fallbackProfile.skills || []);
+      const localUser =
+        JSON.parse(localStorage.getItem("user")) || {};
+
+      const savedProfile =
+        JSON.parse(localStorage.getItem("profile"));
+
+      const fallbackProfile = savedProfile || {
+        name: localUser.fullName || "New User",
+        role: "Student",
+        email: localUser.email || "",
+        phone: "",
+        location: "",
+        bio: "",
+        college: "",
+        degree: "",
+        year: "",
+        cgpa: "",
+        skills: [],
+        projects: [],
+      };
+
+      setProfile(fallbackProfile);
+      setDraft(fallbackProfile);
+      setSkills(fallbackProfile.skills || []);
+    }
   };
 
   const [editing, setEditing] = useState(false);
@@ -63,6 +77,16 @@ function Profile() {
       "profile",
       JSON.stringify(updatedDraft)
     );
+
+    try {
+      // Try backend save
+      await axios.put(
+        "http://localhost:5000/api/profile/update",
+        updatedDraft
+      );
+    } catch (err) {
+      console.log(err);
+    }
 
     setEditing(false);
   };
@@ -217,7 +241,7 @@ function Profile() {
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {["college", "degree", "branch", "year", "cgpa"].map((field) =>
+            {["college", "degree", "year", "cgpa"].map((field) =>
               editing ? (
                 <input
                   key={field}
@@ -227,8 +251,6 @@ function Profile() {
                       ? "Enter college name"
                       : field === "degree"
                         ? "Enter degree"
-                        : field === "branch"
-                        ? "Branch (CSE, IT, ECE…)"
                         : field === "year"
                           ? "Enter academic year"
                           : "Enter CGPA"

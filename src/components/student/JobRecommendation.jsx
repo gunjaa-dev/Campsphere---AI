@@ -11,6 +11,15 @@ import {
 import { usePlacement } from "../context/PlacementContext";
 import { getStudentProfile } from "../../api/camspherApi";
 
+const allJobs = [
+  { id: 1, title: "Software Engineer - AI/ML", company: "Neural Systems Inc.", location: "Bangalore, IN", type: "Full-time", salary: "₹18–24 LPA", tags: ["Python", "ML", "TensorFlow"], deadline: "Oct 20", logo: "🤖", featured: true },
+  { id: 2, title: "Frontend Developer", company: "Skyline Digital", location: "Mumbai, IN", type: "Full-time", salary: "₹12–18 LPA", tags: ["React", "TypeScript", "CSS"], deadline: "Oct 22", logo: "☁️", featured: false },
+  { id: 3, title: "Data Analyst", company: "Global Insight Corp", location: "Hyderabad, IN", type: "Full-time", salary: "₹10–15 LPA", tags: ["SQL", "Python", "Tableau"], deadline: "Oct 25", logo: "📊", featured: false },
+  { id: 4, title: "SDE-1", company: "Microsoft Corp.", location: "Hyderabad, IN", type: "Full-time", salary: "₹20–30 LPA", tags: ["DSA", "System Design", "C++"], deadline: "Oct 14", logo: "🪟", featured: true },
+  { id: 5, title: 'Backend Engineer', company: 'Fintech Labs', location: 'Pune, IN', type: 'Full-time', salary: '₹15–20 LPA', tags: ['Node.js', 'PostgreSQL', 'AWS'], deadline: 'Oct 28', logo: '💳', featured: false },
+  { id: 6, title: 'DevOps Engineer', company: 'CloudBase', location: 'Chennai, IN', type: 'Full-time', salary: '₹14–19 LPA', tags: ['Docker', 'Kubernetes', 'CI/CD'], deadline: 'Nov 1', logo: '☁️', featured: false },
+];
+
 function JobRecommendation() {
   const [search, setSearch] = useState("");
   const [saved, setSaved] = useState([]);
