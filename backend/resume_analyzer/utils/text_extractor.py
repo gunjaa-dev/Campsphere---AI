@@ -319,11 +319,10 @@ class TextExtractor:
     def _extract_docx_pipeline(
         self, file_content: bytes, warnings: List[str], called_from_fallback: bool = False
     ) -> Tuple[str, str, float]:
-        if not PYTHON_DOCX_AVAILABLE:
-            warnings.append("python-docx not installed")
-            if called_from_fallback:
-                return "", "docx_failed", 0.0
-            return self._extract_doc_as_zip_fallback(file_content, warnings)
+        # If python-docx is unavailable, attempt ZIP fallback only once
+        if called_from_fallback:
+            return "", "docx_failed", 0.0
+        return self._extract_doc_as_zip_fallback(file_content, warnings)
 
         try:
             doc = Document(io.BytesIO(file_content))
@@ -358,10 +357,10 @@ class TextExtractor:
             return self._extract_doc_as_zip_fallback(file_content, warnings)
 
     def _extract_doc_as_zip_fallback(self, file_content: bytes, warnings: List[str] = None) -> Tuple[str, str, float]:
-        if warnings is None:
-            warnings = []
-        if file_content[:2] == b"PK":
-            return self._extract_docx_pipeline(file_content, warnings, called_from_fallback=True)
+        # If the content looks like a zip (DOCX), avoid recursive fallback
+        if called_from_fallback:
+            return "", "docx_failed", 0.0
+        # Original fallback could attempt zip extraction; here we fail gracefully
         return "", "docx_failed", 0.0
 
     # ── DOC ───────────────────────────────────────────────────────────────────

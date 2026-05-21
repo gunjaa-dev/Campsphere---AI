@@ -386,7 +386,8 @@ class ResumeScoringEngine:
         max_degree_score = 0
         highest_degree = "Unknown"
         for edu in education:
-            degree = edu.get("degree", "").lower().strip()
+            # Safely fetch degree, handling None
+            degree = (edu.get("degree") or "").lower().strip()
             for deg_key, score in degree_scores.items():
                 if deg_key in degree:
                     if score > max_degree_score:
@@ -404,7 +405,8 @@ class ResumeScoringEngine:
         ]
         has_tier1 = False
         for edu in education:
-            inst = edu.get("institution", "").lower()
+            # Safely fetch institution, handling None
+            inst = (edu.get("institution") or "").lower()
             for tier in tier1_keywords:
                 if tier in inst:
                     has_tier1 = True
