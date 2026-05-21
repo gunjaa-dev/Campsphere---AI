@@ -521,7 +521,26 @@ function Dashboard() {
                     key={index}
                     className="bg-gray-50 border rounded-lg p-3 text-sm"
                   >
-                    {rec}
+                   <div className="flex gap-2 items-center mb-2">
+                    <span className="font-semibold text-red-500">
+                      {rec.priority?.toUpperCase()}
+                    </span>
+
+                    <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">
+                      {rec.category}
+                    </span>
+
+                   </div>
+
+                   <p>
+                     <strong>Issue:</strong>{" "}
+                     {rec.issue}
+                   </p>
+
+                   <p className="mt-2 text-gray-600">
+                    <strong>Action:</strong>{" "}
+                    {rec.action}
+                   </p>
                   </div>
                 )
               )}

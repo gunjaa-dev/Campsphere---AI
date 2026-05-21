@@ -4,14 +4,6 @@ Skills Extractor Module - NLP-based skills extraction using:
 - Keyword matching with comprehensive skills database
 - Named Entity Recognition (NER) via spaCy
 - TF-IDF vectorization for skill importance ranking
-
-v1.1.0 — Bug fixes (all original logic preserved):
-  FIX 1 [Line 394]: tfidf default changed 0.5 → 0.0 (was inflating all scores)
-  FIX 2 [Line 397]: demand_mult normalized 1.5/1.0 → 1.0/0.4 (was dominating formula)
-  FIX 3 [Lines 404-410]: category_weight normalized 1.0-1.2 → 1.0/0.85/0.70 (same issue)
-  FIX 4 [Line 421]: removed max(40,...) floor (was giving every skill min 40/100)
-  FIX 5 [Line 311]: O(n²) feature_names.index() → O(1) dict lookup
-  FIX 6 [Line 446]: diversity base_score log10 → linear (log10 was unreachable)
 """
 
 import re

@@ -22,8 +22,8 @@ from utils.ocr_engine import ocr_bytes, ocr_image, ocr_images
 
 logger = logging.getLogger(__name__)
 
-MIN_TEXT_THRESHOLD = 80
-MIN_CHARS_ACCEPT = 40
+MIN_TEXT_THRESHOLD = 250
+MIN_CHARS_ACCEPT = 120
 
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tif", ".tiff"}
 PDF_EXTENSIONS = {".pdf"}
@@ -317,50 +317,108 @@ class TextExtractor:
     # ── DOCX ──────────────────────────────────────────────────────────────────
 
     def _extract_docx_pipeline(
-        self, file_content: bytes, warnings: List[str], called_from_fallback: bool = False
-    ) -> Tuple[str, str, float]:
-        # If python-docx is unavailable, attempt ZIP fallback only once
-        if called_from_fallback:
-            return "", "docx_failed", 0.0
-        return self._extract_doc_as_zip_fallback(file_content, warnings)
+        self,
+        file_content: bytes,
+        warnings: List[str],
+        called_from_fallback: bool=False
+        ) -> Tuple[str,str,float]:
+
+        if not PYTHON_DOCX_AVAILABLE:
+            warnings.append("python-docx unavailable")
+
+            if called_from_fallback:
+                return "", "docx_failed", 0.0
+
+            return self._extract_doc_as_zip_fallback(
+                file_content,
+                warnings
+            )
 
         try:
             doc = Document(io.BytesIO(file_content))
-            parts: List[str] = []
+
+            parts=[]
 
             for p in doc.paragraphs:
                 if p.text.strip():
                     parts.append(p.text.strip())
 
-            for section in doc.sections:
-                for header in (section.header, section.footer):
-                    for p in header.paragraphs:
-                        if p.text.strip():
-                            parts.append(p.text.strip())
-
             for table in doc.tables:
                 for row in table.rows:
                     for cell in row.cells:
-                        ct = cell.text.strip()
-                        if ct:
-                            parts.append(ct)
+                        txt=cell.text.strip()
+                        if txt:
+                            parts.append(txt)
 
-            text = "\n".join(parts)
-            conf = min(95.0, 60.0 + len(text) / 40.0) if text else 0.0
-            return text, "python-docx", conf
+            text="\n".join(parts)
+
+            conf=min(
+                95.0,
+                60+(len(text)/40)
+            ) if text else 0
+
+            return text,"python-docx",conf
+
         except Exception as e:
-            import traceback
-            traceback.print_exc()
-            warnings.append(f"docx: {e}")
+
+            logger.debug(
+                f"DOCX parse failed: {e}"
+            )
+
             if called_from_fallback:
                 return "", "docx_failed", 0.0
-            return self._extract_doc_as_zip_fallback(file_content, warnings)
 
-    def _extract_doc_as_zip_fallback(self, file_content: bytes, warnings: List[str] = None) -> Tuple[str, str, float]:
-        # If the content looks like a zip (DOCX), avoid recursive fallback
-        if called_from_fallback:
-            return "", "docx_failed", 0.0
-        # Original fallback could attempt zip extraction; here we fail gracefully
+            return self._extract_doc_as_zip_fallback(
+                file_content,
+                warnings
+            )
+
+
+    def _extract_doc_as_zip_fallback(
+        self,
+        file_content: bytes,
+        warnings: List[str]=None
+    )->Tuple[str,str,float]:
+
+        if warnings is None:
+            warnings=[]
+
+        import zipfile
+
+        try:
+
+            z=zipfile.ZipFile(
+                io.BytesIO(file_content)
+            )
+
+            xml=z.read(
+                "word/document.xml"
+            ).decode(
+                "utf-8",
+                errors="ignore"
+            )
+
+            text=re.sub(
+                "<[^>]+>",
+                " ",
+                xml
+            )
+
+            text=self._clean_text(text)
+
+            if len(text)>50:
+                return (
+                    text,
+                    "docx_zip_fallback",
+                    70.0
+                )
+
+        except Exception as e:
+
+            logger.debug(
+                f"ZIP fallback failed:{e}"
+            )
+
         return "", "docx_failed", 0.0
 
     # ── DOC ───────────────────────────────────────────────────────────────────
