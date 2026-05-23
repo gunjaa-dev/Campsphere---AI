@@ -1,6 +1,6 @@
 import { getAllJobs, getJobCategories, getSimilarJobs } from "../../api/camspherApi";
 
-import React, {useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import {
   Plus,
   Search,
@@ -180,10 +180,10 @@ const statusColors = {
 
 function JobManagement() {
   const [jobs, setJobs] = useState(() => {
-  const savedJobs = localStorage.getItem("jobs");
+    const savedJobs = localStorage.getItem("jobs");
 
-  return savedJobs ? JSON.parse(savedJobs) : initialJobs;
-});
+    return savedJobs ? JSON.parse(savedJobs) : initialJobs;
+  });
   const [activeTab, setActiveTab] = useState("jobs");
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
@@ -205,60 +205,60 @@ function JobManagement() {
   });
 
   useEffect(() => {
-  localStorage.setItem("jobs", JSON.stringify(jobs));
-}, [jobs]);
+    localStorage.setItem("jobs", JSON.stringify(jobs));
+  }, [jobs]);
   const filteredJobs = useMemo(() => {
-  return jobs.filter((job) => {
-    const query = search.toLowerCase();
+    return jobs.filter((job) => {
+      const query = search.toLowerCase();
 
-    const matchSearch =
-      job.company.toLowerCase().includes(query) ||
-      job.role.toLowerCase().includes(query) ||
-      job.location.toLowerCase().includes(query) ||
-      job.package.toLowerCase().includes(query) ||
-      job.type.toLowerCase().includes(query) ||
-      job.status.toLowerCase().includes(query);
+      const matchSearch =
+        job.company.toLowerCase().includes(query) ||
+        job.role.toLowerCase().includes(query) ||
+        job.location.toLowerCase().includes(query) ||
+        job.package.toLowerCase().includes(query) ||
+        job.type.toLowerCase().includes(query) ||
+        job.status.toLowerCase().includes(query);
 
-    const matchStatus =
-      statusFilter === "All" || job.status === statusFilter;
+      const matchStatus =
+        statusFilter === "All" || job.status === statusFilter;
 
-    const matchType =
-      typeFilter === "All" || job.type === typeFilter;
+      const matchType =
+        typeFilter === "All" || job.type === typeFilter;
 
-    return matchSearch && matchStatus && matchType;
-  });
-}, [jobs, search, statusFilter, typeFilter]);
+      return matchSearch && matchStatus && matchType;
+    });
+  }, [jobs, search, statusFilter, typeFilter]);
 
-const filteredApplications = useMemo(() => {
-  return applications.filter((app) => {
-    const query = search.toLowerCase();
+  const filteredApplications = useMemo(() => {
+    return applications.filter((app) => {
+      const query = search.toLowerCase();
 
-    return (
-      app.name.toLowerCase().includes(query) ||
-      app.branch.toLowerCase().includes(query) ||
-      app.company.toLowerCase().includes(query) ||
-      app.role.toLowerCase().includes(query) ||
-      app.status.toLowerCase().includes(query) ||
-      app.skills.some((skill) =>
-        skill.toLowerCase().includes(query)
-      )
-    );
-  });
-}, [search]);
+      return (
+        app.name.toLowerCase().includes(query) ||
+        app.branch.toLowerCase().includes(query) ||
+        app.company.toLowerCase().includes(query) ||
+        app.role.toLowerCase().includes(query) ||
+        app.status.toLowerCase().includes(query) ||
+        app.skills.some((skill) =>
+          skill.toLowerCase().includes(query)
+        )
+      );
+    });
+  }, [search]);
 
-const filteredCompanies = useMemo(() => {
-  return jobs.filter((job) => {
-    const query = search.toLowerCase();
+  const filteredCompanies = useMemo(() => {
+    return jobs.filter((job) => {
+      const query = search.toLowerCase();
 
-    return (
-      job.company.toLowerCase().includes(query) ||
-      job.hr.toLowerCase().includes(query) ||
-      job.email.toLowerCase().includes(query) ||
-      job.role.toLowerCase().includes(query) ||
-      job.location.toLowerCase().includes(query)
-    );
-  });
-}, [jobs, search]);
+      return (
+        job.company.toLowerCase().includes(query) ||
+        job.hr.toLowerCase().includes(query) ||
+        job.email.toLowerCase().includes(query) ||
+        job.role.toLowerCase().includes(query) ||
+        job.location.toLowerCase().includes(query)
+      );
+    });
+  }, [jobs, search]);
 
   const totalApplications = jobs.reduce(
     (acc, item) => acc + item.applicants,
@@ -335,347 +335,345 @@ const filteredCompanies = useMemo(() => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f7fb] overflow-x-hidden">
-  <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-6 min-w-0">
+    <div className="min-h-screen bg-[#f5f7fb] dark:bg-black text-black dark:text-white overflow-x-hidden">
+      <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-6 min-w-0">
 
-    {/* HEADER */}
-    <div className="flex flex-wrap items-start justify-between gap-4">
-      <div className="min-w-0">
-        <h2 className="text-2xl md:text-3xl font-bold text-slate-900">
-          Job Management
-        </h2>
-
-        <p className="text-slate-500 mt-1 text-sm md:text-base">
-          {jobs.filter((j) => j.status === "Open").length} active jobs •{" "}
-          {totalApplications} total applications
-        </p>
-      </div>
-
-      <button
-        onClick={() => setOpenModal(true)}
-        className="!bg-indigo-700 hover:bg-indigo-800 text-white px-5 py-3 rounded-2xl flex items-center gap-2 shadow-sm transition-all shrink-0"
-      >
-        <Plus size={18} />
-        Post New Job
-      </button>
-    </div>
-
-    {/* ANALYTICS */}
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-
-      <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm min-w-0">
-        <div className="flex items-center justify-between">
+        {/* HEADER */}
+        <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0">
-            <p className="text-sm text-slate-500">Total Jobs</p>
-            <h2 className="text-3xl font-bold mt-2">{jobs.length}</h2>
-          </div>
-
-          <div className="w-12 h-12 rounded-2xl bg-indigo-100 flex items-center justify-center shrink-0">
-            <Briefcase className="text-indigo-700" />
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm min-w-0">
-        <div className="flex items-center justify-between">
-          <div className="min-w-0">
-            <p className="text-sm text-slate-500">Active Jobs</p>
-
-            <h2 className="text-3xl font-bold mt-2 text-emerald-600">
-              {jobs.filter((j) => j.status === "Open").length}
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white dark:text-white">
+              Job Management
             </h2>
-          </div>
 
-          <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center shrink-0">
-            <CheckCircle2 className="text-emerald-700" />
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm min-w-0">
-        <div className="flex items-center justify-between">
-          <div className="min-w-0">
-            <p className="text-sm text-slate-500">Closed Jobs</p>
-
-            <h2 className="text-3xl font-bold mt-2 text-slate-700">
-              {jobs.filter((j) => j.status === "Closed").length}
-            </h2>
-          </div>
-
-          <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center shrink-0">
-            <PauseCircle className="text-slate-700" />
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm min-w-0">
-        <div className="flex items-center justify-between">
-          <div className="min-w-0">
-            <p className="text-sm text-slate-500">
-              Total Applications
+            <p className="text-slate-500 dark:text-gray-400 mt-1 text-sm md:text-base">
+              {jobs.filter((j) => j.status === "Open").length} active jobs •{" "}
+              {totalApplications} total applications
             </p>
-
-            <h2 className="text-3xl font-bold mt-2 text-indigo-700">
-              {totalApplications}
-            </h2>
           </div>
 
-          <div className="w-12 h-12 rounded-2xl bg-indigo-100 flex items-center justify-center shrink-0">
-            <Users className="text-indigo-700" />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    {/* TABS */}
-    <div className="flex flex-wrap gap-3">
-      {[
-        { id: "jobs", label: "Job Listings" },
-        { id: "applications", label: "Applications" },
-        { id: "companies", label: "Companies" },
-      ].map((tab) => (
-        <button
-          key={tab.id}
-          onClick={() => setActiveTab(tab.id)}
-          className={`px-5 py-3 rounded-2xl border transition-all whitespace-nowrap ${
-            activeTab === tab.id
-              ? "bg-white shadow-sm text-slate-900"
-              : "bg-slate-100 text-slate-500"
-          }`}
-        >
-          {tab.label}
-        </button>
-      ))}
-    </div>
-
-    {/* FILTERS */}
-    <div className="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm">
-
-      <div className="flex flex-col lg:flex-row gap-4 min-w-0">
-
-        <div className="relative flex-1 min-w-0">
-          <Search
-            size={18}
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
-          />
-
-          <input
-            type="text"
-            placeholder={
-               activeTab === "jobs"
-                ? "Search company, role, location..."
-                : activeTab === "applications"
-                ? "Search student, skills, company..."
-                : "Search company, HR, email..."
-                }
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full h-12 rounded-2xl border border-gray-200 pl-12 pr-4 outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-        </div>
-
-        <div className="flex flex-wrap gap-3">
-
-          <select
-            className="h-12 px-4 rounded-2xl border border-gray-200 outline-none min-w-[140px]"
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
+          <button
+            onClick={() => setOpenModal(true)}
+            className="!bg-indigo-700 hover:bg-indigo-800 text-white px-5 py-3 rounded-2xl flex items-center gap-2 shadow-sm transition-all shrink-0"
           >
-            <option>All</option>
-            <option>Open</option>
-            <option>Closed</option>
-            <option>Paused</option>
-            <option>Completed</option>
-          </select>
-
-          <select
-            className="h-12 px-4 rounded-2xl border border-gray-200 outline-none min-w-[140px]"
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value)}
-          >
-            <option>All</option>
-            <option>Full-time</option>
-            <option>Internship</option>
-          </select>
+            <Plus size={18} />
+            Post New Job
+          </button>
         </div>
-      </div>
-    </div>
 
-    {/* JOBS */}
-    {activeTab === "jobs" && (
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+        {/* ANALYTICS */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
 
-        {/* MOBILE CARDS */}
-        <div className="block xl:hidden p-4 space-y-4">
-          {filteredJobs.map((job) => (
-            <div
-              key={job.id}
-              className="border border-gray-200 rounded-2xl p-4"
-            >
-              <div className="flex items-start gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-xl shrink-0">
-                  {job.logo}
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <h3 className="font-semibold text-slate-900 truncate">
-                    {job.role}
-                  </h3>
-
-                  <p className="text-sm text-slate-500 truncate">
-                    {job.company}
-                  </p>
-                </div>
+          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white border-gray-200 dark:border-gray-700 p-5 shadow-sm min-w-0">
+            <div className="flex items-center justify-between">
+              <div className="min-w-0">
+                <p className="text-sm text-slate-500 dark:text-gray-400">Total Jobs</p>
+                <h2 className="text-3xl font-bold mt-2">{jobs.length}</h2>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 mt-4 text-sm">
-
-                <div>
-                  <p className="text-slate-400">Location</p>
-                  <p className="font-medium">{job.location}</p>
-                </div>
-
-                <div>
-                  <p className="text-slate-400">Package</p>
-                  <p className="font-medium">{job.package}</p>
-                </div>
-
-                <div>
-                  <p className="text-slate-400">Applicants</p>
-                  <p className="font-medium">{job.applicants}</p>
-                </div>
-
-                <div>
-                  <p className="text-slate-400">Status</p>
-
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs border inline-flex mt-1 ${statusColors[job.status]}`}
-                  >
-                    {job.status}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between mt-5">
-
-                <div className="flex gap-3">
-
-                  <button className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
-                    <Eye size={18} />
-                  </button>
-
-                  <button className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
-                    <Pencil size={18} />
-                  </button>
-
-                  <button
-                    onClick={() => toggleStatus(job.id)}
-                    className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center"
-                  >
-                    <PauseCircle size={18} />
-                  </button>
-
-                </div>
-
-                <button
-                  onClick={() => deleteJob(job.id)}
-                  className="p-1 rounded hover:bg-red-100 text-red-500"
-                >
-                  <Trash2 size={18} />
-                </button>
-
+              <div className="w-12 h-12 rounded-2xl bg-indigo-100 flex items-center justify-center shrink-0">
+                <Briefcase className="text-indigo-700" />
               </div>
             </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white border-gray-200 dark:border-gray-700 p-5 shadow-sm min-w-0">
+            <div className="flex items-center justify-between">
+              <div className="min-w-0">
+                <p className="text-sm text-slate-500 dark:text-gray-400">Active Jobs</p>
+
+                <h2 className="text-3xl font-bold mt-2 text-emerald-600">
+                  {jobs.filter((j) => j.status === "Open").length}
+                </h2>
+              </div>
+
+              <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center shrink-0">
+                <CheckCircle2 className="text-emerald-700" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white border-gray-200 dark:border-gray-700 p-5 shadow-sm min-w-0">
+            <div className="flex items-center justify-between">
+              <div className="min-w-0">
+                <p className="text-sm text-slate-500 dark:text-gray-400">Closed Jobs</p>
+
+                <h2 className="text-3xl font-bold mt-2 text-slate-700">
+                  {jobs.filter((j) => j.status === "Closed").length}
+                </h2>
+              </div>
+
+              <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center shrink-0">
+                <PauseCircle className="text-slate-700" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white border-gray-200 dark:border-gray-700 p-5 shadow-sm min-w-0">
+            <div className="flex items-center justify-between">
+              <div className="min-w-0">
+                <p className="text-sm text-slate-500 dark:text-gray-400">
+                  Total Applications
+                </p>
+
+                <h2 className="text-3xl font-bold mt-2 text-indigo-700">
+                  {totalApplications}
+                </h2>
+              </div>
+
+              <div className="w-12 h-12 rounded-2xl bg-indigo-100 flex items-center justify-center shrink-0">
+                <Users className="text-indigo-700" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* TABS */}
+        <div className="flex flex-wrap gap-3">
+          {[
+            { id: "jobs", label: "Job Listings" },
+            { id: "applications", label: "Applications" },
+            { id: "companies", label: "Companies" },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-5 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white transition-all whitespace-nowrap ${activeTab === tab.id
+                  ? "bg-white dark:bg-gray-900 shadow-sm text-slate-900 dark:text-white border-gray-200 dark:border-gray-700"
+                  : "bg-slate-100 dark:bg-gray-800 text-slate-500 dark:text-gray-400 border-gray-200 dark:border-gray-700"
+                }`}
+            >
+              {tab.label}
+            </button>
           ))}
         </div>
 
-        {/* DESKTOP TABLE */}
-        <div className="hidden xl:block w-full overflow-hidden">
-          <table className="w-full table-auto">
+        {/* FILTERS */}
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 p-4 shadow-sm">
 
-            <thead className="bg-slate-50 border-b">
-              <tr className="text-left text-sm text-slate-500">
-                <th className="p-5 font-medium">Company / Role</th>
-                <th className="p-5 font-medium">Location</th>
-                <th className="p-5 font-medium">Package</th>
-                <th className="p-5 font-medium">Status</th>
-                <th className="p-5 font-medium">Applicants</th>
-                <th className="p-5 font-medium">Actions</th>
-              </tr>
-            </thead>
+          <div className="flex flex-col lg:flex-row gap-4 min-w-0">
 
-            <tbody>
+            <div className="relative flex-1 min-w-0">
+              <Search
+                size={18}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+              />
+
+              <input
+                type="text"
+                placeholder={
+                  activeTab === "jobs"
+                    ? "Search company, role, location..."
+                    : activeTab === "applications"
+                      ? "Search student, skills, company..."
+                      : "Search company, HR, email..."
+                }
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full h-12 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white pl-12 pr-4 outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+
+              <select
+                className="h-12 px-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white outline-none min-w-[140px]"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+              >
+                <option>All</option>
+                <option>Open</option>
+                <option>Closed</option>
+                <option>Paused</option>
+                <option>Completed</option>
+              </select>
+
+              <select
+                className="h-12 px-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white outline-none min-w-[140px]"
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
+              >
+                <option>All</option>
+                <option>Full-time</option>
+                <option>Internship</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* JOBS */}
+        {activeTab === "jobs" && (
+          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
+            {/* MOBILE CARDS */}
+            <div className="block xl:hidden p-4 space-y-4">
               {filteredJobs.map((job) => (
-                <tr
+                <div
                   key={job.id}
-                  className="border-b hover:bg-slate-50 transition-all"
+                  className="border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-2xl p-4"
                 >
-                  <td className="p-5">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-xl shrink-0">
-                        {job.logo}
-                      </div>
-
-                      <div className="min-w-0">
-                        <h3 className="font-semibold text-slate-900">
-                          {job.role}
-                        </h3>
-
-                        <p className="text-slate-500 text-sm">
-                          {job.company}
-                        </p>
-                      </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-xl shrink-0">
+                      {job.logo}
                     </div>
-                  </td>
 
-                  <td className="p-5 text-sm text-slate-600">
-                    {job.location}
-                  </td>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-semibold text-slate-900 dark:text-white truncate">
+                        {job.role}
+                      </h3>
 
-                  <td className="p-5 font-semibold">
-                    {job.package}
-                  </td>
+                      <p className="text-sm text-slate-500 dark:text-gray-400 truncate">
+                        {job.company}
+                      </p>
+                    </div>
+                  </div>
 
-                  <td className="p-5">
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs border ${statusColors[job.status]}`}
-                    >
-                      {job.status}
-                    </span>
-                  </td>
+                  <div className="grid grid-cols-2 gap-3 mt-4 text-sm">
 
-                  <td className="p-5">
-                    {job.applicants}
-                  </td>
+                    <div>
+                      <p className="text-slate-400">Location</p>
+                      <p className="font-medium">{job.location}</p>
+                    </div>
 
-                  <td className="p-5">
-                    <div className="flex items-center gap-3">
-                      <button onClick={() => toggleStatus(job.id)}>
+                    <div>
+                      <p className="text-slate-400">Package</p>
+                      <p className="font-medium">{job.package}</p>
+                    </div>
+
+                    <div>
+                      <p className="text-slate-400">Applicants</p>
+                      <p className="font-medium">{job.applicants}</p>
+                    </div>
+
+                    <div>
+                      <p className="text-slate-400">Status</p>
+
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs border inline-flex mt-1 ${statusColors[job.status]}`}
+                      >
+                        {job.status}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between mt-5">
+
+                    <div className="flex gap-3">
+
+                      <button className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+                        <Eye size={18} />
+                      </button>
+
+                      <button className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+                        <Pencil size={18} />
+                      </button>
+
+                      <button
+                        onClick={() => toggleStatus(job.id)}
+                        className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center"
+                      >
                         <PauseCircle size={18} />
                       </button>
 
-                      <button onClick={() => deleteJob(job.id)}>
-                        <Trash2 size={18} />
-                      </button>
                     </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
 
-          </table>
-        </div>
+                    <button
+                      onClick={() => deleteJob(job.id)}
+                      className="p-1 rounded hover:bg-red-100 text-red-500"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* DESKTOP TABLE */}
+            <div className="hidden xl:block w-full overflow-hidden">
+              <table className="w-full table-auto">
+
+                <thead className="bg-slate-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                  <tr className="text-left text-sm text-slate-500 dark:text-gray-400">
+                    <th className="p-5 font-medium">Company / Role</th>
+                    <th className="p-5 font-medium">Location</th>
+                    <th className="p-5 font-medium">Package</th>
+                    <th className="p-5 font-medium">Status</th>
+                    <th className="p-5 font-medium">Applicants</th>
+                    <th className="p-5 font-medium">Actions</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {filteredJobs.map((job) => (
+                    <tr
+                      key={job.id}
+                      className="border-b border-gray-200 dark:border-gray-700 hover:bg-slate-50 dark:hover:bg-gray-800 transition-all"
+                    >
+                      <td className="p-5">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-xl shrink-0">
+                            {job.logo}
+                          </div>
+
+                          <div className="min-w-0">
+                            <h3 className="font-semibold text-slate-900 dark:text-white">
+                              {job.role}
+                            </h3>
+
+                            <p className="text-slate-500 dark:text-gray-400 text-sm">
+                              {job.company}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td className="p-5 text-sm text-slate-600">
+                        {job.location}
+                      </td>
+
+                      <td className="p-5 font-semibold">
+                        {job.package}
+                      </td>
+
+                      <td className="p-5">
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs border ${statusColors[job.status]}`}
+                        >
+                          {job.status}
+                        </span>
+                      </td>
+
+                      <td className="p-5">
+                        {job.applicants}
+                      </td>
+
+                      <td className="p-5">
+                        <div className="flex items-center gap-3">
+                          <button onClick={() => toggleStatus(job.id)}>
+                            <PauseCircle size={18} />
+                          </button>
+
+                          <button onClick={() => deleteJob(job.id)}>
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+
+              </table>
+            </div>
+          </div>
+        )}
       </div>
-    )}
-  </div>
 
       {/* APPLICATIONS */}
       {activeTab === "applications" && (
-        <div className="bg-white rounded-3xl border shadow-sm mt-6 overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm mt-6 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[1000px]">
-              <thead className="bg-slate-50 border-b">
-                <tr className="text-left text-sm text-slate-500">
+              <thead className="bg-slate-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                <tr className="text-left text-sm text-slate-500 dark:text-gray-400">
                   <th className="p-5">Student</th>
                   <th className="p-5">Branch</th>
                   <th className="p-5">CGPA</th>
@@ -712,15 +710,14 @@ const filteredCompanies = useMemo(() => {
 
                     <td className="p-5">
                       <span
-                        className={`px-3 py-1 rounded-full text-xs border ${
-                          app.status === "Selected"
+                        className={`px-3 py-1 rounded-full text-xs border ${app.status === "Selected"
                             ? "bg-emerald-100 text-emerald-700 border-emerald-200"
                             : app.status === "Rejected"
-                            ? "bg-red-100 text-red-700 border-red-200"
-                            : app.status === "Shortlisted"
-                            ? "bg-indigo-100 text-indigo-700 border-indigo-200"
-                            : "bg-yellow-100 text-yellow-700 border-yellow-200"
-                        }`}
+                              ? "bg-red-100 text-red-700 border-red-200"
+                              : app.status === "Shortlisted"
+                                ? "bg-indigo-100 text-indigo-700 border-indigo-200"
+                                : "bg-yellow-100 text-yellow-700 border-yellow-200"
+                          }`}
                       >
                         {app.status}
                       </span>
@@ -739,7 +736,7 @@ const filteredCompanies = useMemo(() => {
           {filteredCompanies.map((job) => (
             <div
               key={job.id}
-              className="bg-white rounded-3xl border shadow-sm p-6"
+              className="bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-700 shadow-sm p-6"
             >
               <div className="flex items-start justify-between">
                 <div className="flex gap-4">
@@ -764,7 +761,7 @@ const filteredCompanies = useMemo(() => {
 
                 <div className="text-right">
                   <h3 className="font-bold">1 Job</h3>
-                  <p className="text-sm text-slate-500">
+                  <p className="text-sm text-slate-500 dark:text-gray-400">
                     {job.applicants} applicants
                   </p>
                 </div>
@@ -787,7 +784,7 @@ const filteredCompanies = useMemo(() => {
               <div className="border-t my-5" />
 
               <div>
-                <p className="text-sm text-slate-500 mb-3">
+                <p className="text-sm text-slate-500 dark:text-gray-400 mb-3">
                   Posted Role
                 </p>
 
@@ -812,14 +809,14 @@ const filteredCompanies = useMemo(() => {
       {openModal && (
         <div className="fixed inset-0 bg-black/40 z-50 overflow-y-auto p-0">
           <div className="min-h-screen flex items-center justify-center">
-            <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-4 space-y-3">
+            <div className="w-full max-w-md bg-white dark:bg-gray-900 text-black dark:text-white rounded-2xl shadow-2xl p-4 space-y-3">
               <div className="flex items-center justify-between mb-3">
                 <div>
                   <h3 className="text-2xl font-bold">
                     Create New Job
                   </h3>
 
-                  <p className="text-slate-500 ">
+                  <p className="text-slate-500 dark:text-gray-400 ">
                     Add a new placement opportunity
                   </p>
                 </div>
@@ -835,7 +832,7 @@ const filteredCompanies = useMemo(() => {
               <div className="grid md:grid-cols-2 gap-5">
                 <input
                   placeholder="Company Name"
-                  className="h-8 rounded-2xl border px-4 outline-none"
+                  className="h-8 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white px-4 outline-none"
                   value={form.company}
                   onChange={(e) =>
                     setForm({ ...form, company: e.target.value })
@@ -844,7 +841,7 @@ const filteredCompanies = useMemo(() => {
 
                 <input
                   placeholder="Role Title"
-                  className="h-8 rounded-2xl border px-4 outline-none"
+                  className="h-8 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white px-4 outline-none"
                   value={form.role}
                   onChange={(e) =>
                     setForm({ ...form, role: e.target.value })
@@ -853,7 +850,7 @@ const filteredCompanies = useMemo(() => {
 
                 <input
                   placeholder="Package / Salary"
-                  className="h-8 rounded-2xl border px-4 outline-none"
+                  className="h-8 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white px-4 outline-none"
                   value={form.package}
                   onChange={(e) =>
                     setForm({ ...form, package: e.target.value })
@@ -862,7 +859,7 @@ const filteredCompanies = useMemo(() => {
 
                 <input
                   placeholder="Location"
-                  className="h-8 rounded-2xl border px-4 outline-none"
+                  className="h-8 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white px-4 outline-none"
                   value={form.location}
                   onChange={(e) =>
                     setForm({ ...form, location: e.target.value })
@@ -871,7 +868,7 @@ const filteredCompanies = useMemo(() => {
 
                 <input
                   placeholder="CGPA Requirement"
-                  className="h-8 rounded-2xl border px-4 outline-none"
+                  className="h-8 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white px-4 outline-none"
                   value={form.cgpa}
                   onChange={(e) =>
                     setForm({ ...form, cgpa: e.target.value })
@@ -879,7 +876,7 @@ const filteredCompanies = useMemo(() => {
                 />
 
                 <select
-                  className="h-8rounded-2xl border px-4 outline-none"
+                  className="h-8rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white px-4 outline-none"
                   value={form.type}
                   onChange={(e) =>
                     setForm({ ...form, type: e.target.value })
@@ -892,7 +889,7 @@ const filteredCompanies = useMemo(() => {
 
                 <input
                   type="date"
-                  className="h-8 rounded-2xl border px-4 outline-none"
+                  className="h-8 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white px-4 outline-none"
                   value={form.deadline}
                   onChange={(e) =>
                     setForm({ ...form, deadline: e.target.value })
@@ -901,7 +898,7 @@ const filteredCompanies = useMemo(() => {
 
                 <input
                   placeholder="Apply Link"
-                  className="h-8 rounded-2xl border px-4 outline-none"
+                  className="h-8 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white px-4 outline-none"
                   value={form.applyLink}
                   onChange={(e) =>
                     setForm({ ...form, applyLink: e.target.value })
@@ -911,7 +908,7 @@ const filteredCompanies = useMemo(() => {
                 <textarea
                   rows={2}
                   placeholder="Required Skills (comma separated)"
-                  className="rounded-2xl border p-3 outline-none md:col-span-2"
+                  className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white p-3 outline-none md:col-span-2"
                   value={form.skills}
                   onChange={(e) =>
                     setForm({ ...form, skills: e.target.value })
@@ -921,7 +918,7 @@ const filteredCompanies = useMemo(() => {
                 <textarea
                   rows={2}
                   placeholder="Eligibility Criteria"
-                  className="rounded-2xl border p-3 outline-none md:col-span-2"
+                  className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white p-3 outline-none md:col-span-2"
                   value={form.eligibility}
                   onChange={(e) =>
                     setForm({
@@ -934,7 +931,7 @@ const filteredCompanies = useMemo(() => {
                 <textarea
                   rows={2}
                   placeholder="Job Description"
-                  className="rounded-2xl border p-3 outline-none md:col-span-2"
+                  className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white p-3 outline-none md:col-span-2"
                   value={form.description}
                   onChange={(e) =>
                     setForm({
@@ -948,7 +945,7 @@ const filteredCompanies = useMemo(() => {
               <div className="flex justify-end gap-3 mt-5">
                 <button
                   onClick={() => setOpenModal(false)}
-                  className="px-5 py-3 rounded-2xl border"
+                  className="px-5 py-3 rounded-2xl border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   Cancel
                 </button>

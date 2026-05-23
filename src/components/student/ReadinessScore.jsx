@@ -26,9 +26,10 @@ import {
   Bell,
   Settings,
 } from "lucide-react";
+import ThemeToggle from "../common/ThemeToggle";
 /* UI */
 const Badge = ({ children }) => (
-  <span className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-600 font-semibold">
+  <span className="px-2 py-1 text-xs rounded-full bg-blue-100 dark:bg-blue-950/30 text-blue-600 dark:text-blue-300 font-semibold">
     {children}
   </span>
 );
@@ -88,14 +89,14 @@ function ReadinessScore() {
   const actionPlan = readiness?.action_plan || [];
   const improvements = actionPlan.length
     ? actionPlan.slice(0, 6).map((item) => ({
-        text: item.action || item.title || item.description,
-        done: item.priority === "completed",
-      }))
+      text: item.action || item.title || item.description,
+      done: item.priority === "completed",
+    }))
     : [
-        { text: "Upload resume on Dashboard", done: !!resumeData },
-        { text: "Add CGPA in Profile", done: !!savedProfile.cgpa },
-        { text: "Complete 3+ projects", done: (savedProfile.projects?.length || 0) >= 3 },
-      ];
+      { text: "Upload resume on Dashboard", done: !!resumeData },
+      { text: "Add CGPA in Profile", done: !!savedProfile.cgpa },
+      { text: "Complete 3+ projects", done: (savedProfile.projects?.length || 0) >= 3 },
+    ];
 
   const tierData = useMemo(() => {
     const tiers = readiness?.company_tiers;
@@ -141,10 +142,10 @@ function ReadinessScore() {
   ];
 
   return (
-    <div className="w-full p-4 md:p-6 lg:p-8 space-y-5">
+    <div className="w-full min-h-screen p-4 md:p-6 lg:p-8 space-y-5 bg-gray-100 dark:bg-gray-950 dark:text-white">
 
       {/* NAVBAR */}
-      <header className="bg-white border rounded-2xl px-6 py-4 flex items-center justify-between shadow-sm">
+      <header className="bg-white dark:bg-gray-900 border dark:border-gray-700 rounded-2xl px-6 py-4 flex items-center justify-between shadow-sm">
         <h2 className="font-semibold text-lg">Readiness Score</h2>
         <div className="flex items-center gap-3">
           {/* Notifications */}
@@ -155,13 +156,13 @@ function ReadinessScore() {
                 setShowNotifications(!showNotifications);
                 setShowSettings(false);
               }}
-              className="p-2 rounded-lg hover:bg-gray-100"
+              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
             >
               <Bell size={18} />
             </button>
 
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-72 bg-white border rounded-2xl shadow-lg p-4 z-50">
+              <div className="absolute right-0 mt-2 w-72 bg-white dark:bg-gray-900 border dark:border-gray-700 rounded-2xl shadow-lg p-4 z-50">
                 <h4 className="font-semibold mb-3">
                   Notifications
                 </h4>
@@ -172,7 +173,7 @@ function ReadinessScore() {
                     (notification, index) => (
                       <div
                         key={index}
-                        className="border-b pb-2 last:border-none"
+                        className="border-b dark:border-gray-700 pb-2 last:border-none"
                       >
                         {notification}
                       </div>
@@ -190,19 +191,19 @@ function ReadinessScore() {
                 setShowSettings(!showSettings);
                 setShowNotifications(false);
               }}
-              className="p-2 rounded-lg hover:bg-gray-100"
+              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-white"
             >
               <Settings size={18} />
             </button>
 
             {showSettings && (
-              <div className="absolute right-0 mt-2 w-56 bg-white border rounded-2xl shadow-lg p-2 z-50">
+              <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-900 border dark:border-gray-700 rounded-2xl shadow-lg p-2 z-50">
 
                 <button
                   onClick={() =>
                     navigate("/student-dashboard/profile")
                   }
-                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100 text-sm"
+                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-sm"
                 >
                   Profile Settings
                 </button>
@@ -211,17 +212,27 @@ function ReadinessScore() {
                   onClick={() =>
                     navigate("/student-dashboard/readiness-score")
                   }
-                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100 text-sm"
+                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-sm"
                 >
                   Readiness Analytics
                 </button>
+                {/* DARK MODE */}
+                <div className="flex items-center justify-between px-3 py-2">
+
+                  <p className="text-sm">
+                    Dark Mode
+                  </p>
+
+                  <ThemeToggle />
+
+                </div>
 
                 <button
                   onClick={() => {
                     localStorage.removeItem("user");
                     navigate("/login");
                   }}
-                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100 text-sm text-red-500"
+                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-sm text-red-500"
                 >
                   Logout
                 </button>
@@ -246,19 +257,19 @@ function ReadinessScore() {
           <h1 className="text-2xl md:text-3xl font-bold">
             Readiness Score
           </h1>
-          <p className="text-gray-500 text-sm">
+          <p className="text-gray-500 dark:text-gray-400 text-sm">
             AI-powered placement analysis
           </p>
         </div>
 
         {/* HERO SECTION */}
-        <div className="bg-white rounded-xl border shadow p-4 sm:p-6 flex flex-col lg:flex-row gap-6">
+        <div className="bg-white dark:bg-gray-900 rounded-xl border dark:border-gray-700 shadow p-4 sm:p-6 flex flex-col lg:flex-row gap-6">
           <div className="flex flex-col items-center justify-center min-w-[120px]">
             <ReadinessChart value={score} />
             <div className="mt-2 flex flex-col items-center gap-1">
               <Badge>{readiness?.readiness_grade || "Profile"}</Badge>
               {prediction?.selection_probability != null && (
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-gray-500 dark:text-gray-400">
                   {Math.round(prediction.selection_probability)}% placement odds
                 </span>
               )}
@@ -278,7 +289,7 @@ function ReadinessScore() {
                         : "Needs Improvement")}
                 </span>
               </h2>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
                 Improve your score by completing tasks below.
               </p>
             </div>
@@ -287,7 +298,7 @@ function ReadinessScore() {
               {categoryScores.map((cat) => (
                 <div
                   key={cat.label}
-                  className="flex items-center gap-3 p-3 border rounded-lg"
+                  className="flex items-center gap-3 p-3 border dark:border-gray-700 rounded-lg"
                 >
                   <cat.icon className="text-blue-600" size={18} />
                   <div className="flex-1">
@@ -297,7 +308,7 @@ function ReadinessScore() {
                         {cat.score}%
                       </span>
                     </div>
-                    <div className="bg-gray-200 h-1.5 rounded-full">
+                    <div className="bg-gray-200 dark:bg-gray-700 h-1.5 rounded-full">
                       <div
                         className="bg-blue-600 h-1.5 rounded-full"
                         style={{ width: `${cat.score}%` }}
@@ -313,7 +324,7 @@ function ReadinessScore() {
 
         {/* CHARTS */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-          <div className="bg-white rounded-xl border shadow p-5 min-w-0">
+          <div className="bg-white dark:bg-gray-900 rounded-xl border dark:border-gray-700 shadow p-5 min-w-0">
             <h3 className="text-sm font-semibold mb-4">Skill Radar</h3>
             <div className="w-full min-h-[260px] ">
               <ResponsiveContainer width="100%" height={300}>
@@ -332,7 +343,7 @@ function ReadinessScore() {
           </div>
 
           {/* BAR */}
-          <div className="bg-white rounded-xl border shadow p-5 min-h-0">
+          <div className="bg-white dark:bg-gray-900 rounded-xl border dark:border-gray-700 shadow p-5 min-h-0">
             <h3 className="text-sm font-semibold mb-4">
               Company Match %
             </h3>
@@ -352,7 +363,7 @@ function ReadinessScore() {
         </div>
 
         {/* TASKS */}
-        <div className="bg-white rounded-xl border shadow p-5">
+        <div className="bg-white dark:bg-gray-900 rounded-xl border dark:border-gray-700 shadow p-5">
           <div className="flex justify-between mb-4">
             <h3 className="font-semibold">Improvement Tasks</h3>
             <Badge>{completed}/{tasks.length}</Badge>
@@ -363,9 +374,9 @@ function ReadinessScore() {
               <button
                 key={i}
                 onClick={() => toggle(i)}
-                className={`w-full flex items-center gap-3 p-3 border rounded-lg transition ${task.done
-                  ? "bg-blue-50"
-                  : "hover:bg-gray-100"
+                className={`w-full flex items-center gap-3 p-3 border dark:border-gray-700 rounded-lg transition ${task.done
+                  ? "bg-blue-50 dark:bg-blue-950/30"
+                  : "hover:bg-gray-100 dark:hover:bg-gray-800"
                   }`}
               >
                 {task.done ? (

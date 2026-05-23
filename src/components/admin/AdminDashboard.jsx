@@ -10,13 +10,16 @@ import {
   Minus,
   Download,
   ExternalLink,
+  Bell,
+  Settings,
 } from "lucide-react";
+import ThemeToggle from "../common/ThemeToggle";
 
 /* CARD */
 
 const Card = ({ children, className = "" }) => (
   <div
-    className={`bg-white rounded-2xl border shadow-sm p-4 md:p-5 overflow-hidden min-w-0 ${className}`}
+    className={`bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-black dark:text-white rounded-2xl shadow-sm p-4 md:p-5 overflow-hidden min-w-0 ${className}`}
   >
     {children}
   </div>
@@ -38,28 +41,134 @@ const Header = () => {
   const navigate = useNavigate();
   const tabs = ["Network", "Insights", "Calendar"];
   const [active, setActive] = useState("Network");
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   return (
-    <div className="bg-white rounded-2xl border shadow-sm px-4 md:px-6 py-4">
+    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm px-4 md:px-6 py-4 text-black dark:text-white">
 
       <div className="flex items-center justify-between gap-4">
 
         {/* LEFT */}
-        <h2 className="text-base md:text-lg font-semibold text-gray-800">
+        <h2 className="text-base md:text-lg font-semibold text-gray-800 dark:text-white">
           Placement Intelligence Center
         </h2>
 
-        {/* RIGHT */}
-        <div
-  onClick={() => navigate("/admin-dashboard/profile")}
-  className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-semibold cursor-pointer shrink-0"
->
-          {(
-            JSON.parse(localStorage.getItem("user"))?.fullName ||
-            "User"
-          )
-            .charAt(0)
-            .toUpperCase()}
+        <div className="flex items-center gap-3">
+
+          {/* Notifications */}
+          <div className="relative">
+
+            <button
+              onClick={() => {
+                setShowNotifications(!showNotifications);
+                setShowSettings(false);
+              }}
+              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+            >
+              <Bell size={18} />
+            </button>
+
+            {showNotifications && (
+              <div className="absolute right-0 mt-2 w-72 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg p-4 z-50">
+
+                <h4 className="font-semibold mb-3">
+                  Notifications
+                </h4>
+
+                <div className="space-y-3 text-sm">
+
+                  {[
+                    "3 new recruiter requests pending",
+                    "Placement report generated",
+                    "12 new students registered",
+                    "Analytics updated successfully",
+                  ].map((item, index) => (
+                    <div
+                      key={index}
+                      className="border-b border-gray-200 dark:border-gray-700 pb-2 last:border-none"
+                    >
+                      {item}
+                    </div>
+                  ))}
+
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Settings */}
+          <div className="relative">
+
+            <button
+              onClick={() => {
+                setShowSettings(!showSettings);
+                setShowNotifications(false);
+              }}
+              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+            >
+              <Settings size={18} />
+            </button>
+
+            {showSettings && (
+              <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg p-2 z-50">
+
+                <button
+                  onClick={() =>
+                    navigate("/admin-dashboard/profile")
+                  }
+                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-sm"
+                >
+                  Profile Settings
+                </button>
+
+                <button
+                  onClick={() =>
+                    navigate("/admin-dashboard/analytics")
+                  }
+                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-sm"
+                >
+                  Analytics
+                </button>
+
+                {/* DARK MODE */}
+                <div className="flex items-center justify-between px-3 py-2">
+
+                  <p className="text-sm">
+                    Dark Mode
+                  </p>
+
+                  <ThemeToggle />
+
+                </div>
+
+                <button
+                  onClick={() => {
+                    localStorage.removeItem("user");
+                    navigate("/login");
+                  }}
+                  className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-sm text-red-500"
+                >
+                  Logout
+                </button>
+
+              </div>
+            )}
+          </div>
+
+          {/* Avatar */}
+          <div
+            onClick={() => navigate("/admin-dashboard/profile")}
+            className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-semibold cursor-pointer shrink-0"
+          >
+            {(
+              JSON.parse(localStorage.getItem("user"))?.fullName ||
+              "User"
+            )
+              .charAt(0)
+              .toUpperCase()}
+          </div>
+
         </div>
 
       </div>
@@ -82,7 +191,7 @@ const PlacementStats = () => (
       </span>
     </div>
 
-    <p className="text-sm text-gray-500 mt-4">
+    <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
       Placement % for Current Year
     </p>
 
@@ -124,7 +233,7 @@ const TopBranches = () => {
               </span>
             </div>
 
-            <div className="h-2 rounded-full bg-gray-200 overflow-hidden">
+            <div className="h-2 rounded-full bg-gray-200 dark:bg-gray-800 dark:bg-gray-800 overflow-hidden">
               <div
                 className="h-2 rounded-full bg-blue-600"
                 style={{ width: `${branch.value}%` }}
@@ -215,7 +324,7 @@ const CompanyTrends = () => (
     <div className="hidden lg:block overflow-hidden">
       <table className="w-full table-fixed text-sm">
 
-        <thead className="text-gray-500 border-b">
+        <thead className="text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
           <tr>
             <th className="text-left py-3 w-[32%]">
               Company
@@ -247,7 +356,7 @@ const CompanyTrends = () => (
           {companies.map((company) => (
             <tr
               key={company.name}
-              className="border-b last:border-0"
+              className="border-b border-gray-200 dark:border-gray-700 last:border-0"
             >
 
               <td className="py-4 pr-2 truncate font-medium">
@@ -265,7 +374,7 @@ const CompanyTrends = () => (
               <td>
                 <div className="flex items-center gap-2 min-w-0">
 
-                  <div className="flex-1 h-2 rounded-full bg-gray-200 overflow-hidden">
+                  <div className="flex-1 h-2 rounded-full bg-gray-200 dark:bg-gray-800 overflow-hidden">
                     <div
                       className="h-2 rounded-full bg-blue-600"
                       style={{
@@ -301,7 +410,7 @@ const CompanyTrends = () => (
       {companies.map((company) => (
         <div
           key={company.name}
-          className="border rounded-xl p-4 space-y-3"
+          className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 space-y-3"
         >
 
           <div className="flex items-start justify-between gap-3">
@@ -311,7 +420,7 @@ const CompanyTrends = () => (
                 {company.name}
               </h4>
 
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
                 {company.package}
               </p>
             </div>
@@ -335,7 +444,7 @@ const CompanyTrends = () => (
               <span>{company.conversion}%</span>
             </div>
 
-            <div className="w-full h-2 rounded-full bg-gray-200 overflow-hidden">
+            <div className="w-full h-2 rounded-full bg-gray-200 dark:bg-gray-800 overflow-hidden">
               <div
                 className="h-2 rounded-full bg-blue-600"
                 style={{

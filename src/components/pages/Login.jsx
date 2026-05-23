@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff, User, Briefcase, Building2 } from "lucide-react";
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "../../firebase/firebase";
 
 const Login = () => {
   const [fullName, setFullName] = useState("");
@@ -46,6 +48,37 @@ const Login = () => {
   };
 
   const current = roleConfig[role];
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+
+      const user = result.user;
+
+      const userData = {
+        fullName: user.displayName,
+        email: user.email,
+        profilePic: user.photoURL,
+        role: role,
+      };
+
+      localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("role", role);
+
+      alert("Google Login Successful!");
+
+      if (role === "student") {
+        navigate("/student-dashboard");
+      } else if (role === "recruiter") {
+        navigate("/recruiter-dashboard");
+      } else if (role === "admin") {
+        navigate("/admin-dashboard");
+      }
+
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -154,10 +187,10 @@ const Login = () => {
 
   return (
     <div
-      className={`min-h-screen w-screen flex items-center justify-center bg-gradient-to-br ${current.gradient}`}
+      className={`min-h-screen w-screen flex items-center justify-center bg-gradient-to-br ${current.gradient} dark:from-gray-950 dark:via-gray-900 dark:to-black transition-all duration-300`}
     >
       {/* CARD */}
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-6 sm:p-8 text-center">
+      <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-3xl shadow-2xl p-6 sm:p-8 text-center dark:text-white border dark:border-gray-700 transition-all duration-300">
 
         {/* ICON */}
         <div className={`w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-2xl shadow ${current.iconBg}`}>
@@ -171,21 +204,21 @@ const Login = () => {
             : current.title}
         </h2>
 
-        <p className="text-gray-500 text-sm mb-6">
+        <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
           {showSignup
             ? "Create your new account"
             : "Welcome back! Please enter your credentials"}
         </p>
         {showSignup && (
           <div
-            className={`flex items-center border rounded-lg px-3 mb-4 focus-within:ring-2 ${current.ring}`}
+            className={`flex items-center border dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg px-3 mb-4 focus-within:ring-2 ${current.ring}`}
           >
-            <User className="text-gray-400 w-5" />
+            <User className="text-gray-400 dark:text-gray-500 w-5" />
 
             <input
               type="text"
               placeholder="Full Name"
-              className="w-full p-3 outline-none text-sm sm:text-base"
+              className="w-full p-3 outline-none text-sm sm:text-base bg-transparent dark:text-white placeholder:text-gray-400"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
             />
@@ -194,14 +227,14 @@ const Login = () => {
 
         {showSignup && role === "recruiter" && (
           <div
-            className={`flex items-center border rounded-lg px-3 mb-4 focus-within:ring-2 ${current.ring}`}
+            className={`flex items-center border dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg px-3 mb-4 focus-within:ring-2 ${current.ring}`}
           >
-            <Briefcase className="text-gray-400 w-5" />
+            <Briefcase className="text-gray-400 dark:text-gray-500 w-5" />
 
             <input
               type="text"
               placeholder="Company Name"
-              className="w-full p-3 outline-none text-sm sm:text-base"
+              className="w-full p-3 outline-none text-sm sm:text-base bg-transparent dark:text-white placeholder:text-gray-400"
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
             />
@@ -210,38 +243,38 @@ const Login = () => {
 
         {showSignup && role === "admin" && (
           <div
-            className={`flex items-center border rounded-lg px-3 mb-4 focus-within:ring-2 ${current.ring}`}
+            className={`flex items-center border dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg px-3 mb-4 focus-within:ring-2 ${current.ring}`}
           >
-            <Building2 className="text-gray-400 w-5" />
+            <Building2 className="text-gray-400 dark:text-gray-500 w-5" />
 
             <input
               type="text"
               placeholder="College Name"
-              className="w-full p-3 outline-none text-sm sm:text-base"
+              className="w-full p-3 outline-none text-sm sm:text-base bg-transparent dark:text-white placeholder:text-gray-400"
               value={collegeName}
               onChange={(e) => setCollegeName(e.target.value)}
             />
           </div>
         )}
         {/* EMAIL */}
-        <div className={`flex items-center border rounded-lg px-3 mb-4 focus-within:ring-2 ${current.ring}`}>
-          <Mail className="text-gray-400 w-5" />
+        <div className={`flex items-center border dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg px-3 mb-4 focus-within:ring-2 ${current.ring}`}>
+          <Mail className="text-gray-400 dark:text-gray-500 w-5" />
           <input
             type="email"
             placeholder="Email address"
-            className="w-full p-3 outline-none text-sm sm:text-base"
+            className="w-full p-3 outline-none text-sm sm:text-base bg-transparent dark:text-white placeholder:text-gray-400"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 
         {/* PASSWORD */}
-        <div className={`flex items-center border rounded-lg px-3 mb-4 focus-within:ring-2 ${current.ring}`}>
-          <Lock className="text-gray-400 w-5" />
+        <div className={`flex items-center border dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg px-3 mb-4 focus-within:ring-2 ${current.ring}`}>
+          <Lock className="text-gray-400 dark:text-gray-500 w-5" />
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Password"
-            className="w-full p-3 outline-none text-sm sm:text-base"
+            className="w-full p-3 outline-none text-sm sm:text-base bg-transparent dark:text-white placeholder:text-gray-400"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -274,7 +307,7 @@ const Login = () => {
         </button>
 
         {/* TOGGLE LOGIN/SIGNUP */}
-        <p className="text-sm text-gray-500 mt-5">
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-5">
           {showSignup
             ? "Already have an account? "
             : "Don't have an account? "}
@@ -288,10 +321,13 @@ const Login = () => {
         </p>
 
         {/* DIVIDER */}
-        <div className="my-5 text-gray-400 text-sm">or</div>
+        <div className="my-5 text-gray-400 dark:text-gray-500 text-sm">or</div>
 
         {/* GOOGLE BUTTON */}
-        <button className="w-full border py-3 rounded-lg flex items-center justify-center gap-2 text-sm sm:text-base hover:bg-gray-50 transition-all">
+        <button
+          onClick={handleGoogleLogin}
+          className="w-full border dark:border-gray-700 py-3 rounded-lg flex items-center justify-center gap-2 text-sm sm:text-base hover:bg-gray-50 dark:hover:bg-gray-800 transition-all dark:text-white"
+        >
           <img
             src="https://www.svgrepo.com/show/475656/google-color.svg"
             alt="google"

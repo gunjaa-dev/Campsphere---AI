@@ -56,18 +56,18 @@ function Dashboard() {
   const savedProfile =
     JSON.parse(localStorage.getItem("profile") || "{}");
 
-const {
-  resumeData,
-  jobData,
-  prediction,
-  readiness,
-  loading,
-  error,
-  progress,
-  runPipeline,
-  getAtsScore,
-  resetAnalysis,
-} = usePlacement();
+  const {
+    resumeData,
+    jobData,
+    prediction,
+    readiness,
+    loading,
+    error,
+    progress,
+    runPipeline,
+    getAtsScore,
+    resetAnalysis,
+  } = usePlacement();
 
   const readinessScore = readiness?.readiness_score ?? Math.min(
     (savedProfile.skills?.length || 0) * 10 +
@@ -183,43 +183,42 @@ const {
     }
 
     try {
-     const result = await runPipeline(file);
+      const result = await runPipeline(file);
 
-localStorage.setItem(
-  "profile",
-  JSON.stringify({
-    name:
-      JSON.parse(localStorage.getItem("user"))
-        ?.fullName || "User",
+      localStorage.setItem(
+        "profile",
+        JSON.stringify({
+          name:
+            JSON.parse(localStorage.getItem("user"))
+              ?.fullName || "User",
 
-    role: "Student",
+          role: "Student",
 
-    skills:
-      result?.resumeData?.analysis?.skills
-        ?.found_skills || [],
+          skills:
+            result?.resumeData?.analysis?.skills
+              ?.found_skills || [],
 
-    college:
-      result?.resumeData?.analysis?.content
-        ?.education?.[0]?.institution || "",
+          college:
+            result?.resumeData?.analysis?.content
+              ?.education?.[0]?.institution || "",
 
-    degree:
-      result?.resumeData?.analysis?.content
-        ?.education?.[0]?.degree || "",
+          degree:
+            result?.resumeData?.analysis?.content
+              ?.education?.[0]?.degree || "",
 
-    year:
-      result?.resumeData?.analysis?.content
-        ?.education?.[0]?.duration || "",
+          year:
+            result?.resumeData?.analysis?.content
+              ?.education?.[0]?.duration || "",
 
-    projects:
-      result?.resumeData?.analysis?.content
-        ?.projects?.map((p) => ({
-          title: p.name,
-          description: p.description,
-        })) || [],
-  })
-);
-/*  */
-toast.success("Full AI analysis complete!");
+          projects:
+            result?.resumeData?.analysis?.content
+              ?.projects?.map((p) => ({
+                title: p.name,
+                description: p.description,
+              })) || [],
+        })
+      );
+      toast.success("Full AI analysis complete!");
     } catch (err) {
       toast.error(err.message || "Analysis failed. Is the backend running?");
     } finally {
@@ -361,8 +360,8 @@ toast.success("Full AI analysis complete!");
 
         <div
           className={`flex flex-col sm:flex-row items-stretch sm:items-center gap-3 border-2 border-dashed rounded-xl p-4 transition ${dragOver
-  ? "border-blue-500 bg-blue-50 dark:bg-blue-950"
-  : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900"
+            ? "border-blue-500 bg-blue-50 dark:bg-blue-950"
+            : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900"
             }`}
           onDragOver={(e) => {
             e.preventDefault();
@@ -555,7 +554,7 @@ toast.success("Full AI analysis complete!");
             <div className="mt-6">
               <h3 className="font-semibold text-lg mb-3">Score Breakdown</h3>
               <div className="w-full min-h-[300px]">
-  <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={scoreChartData} layout="vertical">
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis type="number" domain={[0, 100]} />
@@ -638,18 +637,25 @@ toast.success("Full AI analysis complete!");
           </div>
 
           <div className="mt-2">
-            <span className="text-4xl font-bold">
-              {
-                resumeData?.analysis?.education?.[0]?.cgpa ||
-                resumeData?.extraction?.cgpa ||
-                savedProfile?.cgpa ||
-                "Not added"
-              }
-            </span>
+            {resumeData?.analysis?.education?.[0]?.cgpa ||
+              resumeData?.extraction?.cgpa ||
+              savedProfile?.cgpa ? (
+              <>
+                <span className="text-4xl font-bold">
+                  {resumeData?.analysis?.education?.[0]?.cgpa ||
+                    resumeData?.extraction?.cgpa ||
+                    savedProfile?.cgpa}
+                </span>
 
-            <span className="text-sm text-gray-500 dark:text-gray-400 ml-1">
-              / 10.0 CGPA
-            </span>
+                <span className="text-sm text-gray-500 dark:text-gray-400 ml-1">
+                  / 10.0 CGPA
+                </span>
+              </>
+            ) : (
+              <span className="text-base text-gray-500 dark:text-gray-400">
+                Not added
+              </span>
+            )}
           </div>
         </div>
 

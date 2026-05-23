@@ -134,7 +134,7 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] via-white to-[#f8fafc] dark:from-[#0f172a] dark:to-[#020617] transition">
+    <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] via-white to-[#f8fafc] dark:from-gray-950 dark:via-black dark:to-gray-900 transition">
 
       <Navbar />
 
@@ -157,13 +157,13 @@ const LandingPage = () => {
 
               <div
                 key={index}
-                className="bg-white/70 backdrop-blur border rounded-2xl px-5 py-3 shadow-sm"
+                className="bg-white/70 dark:bg-gray-900/60 backdrop-blur border dark:border-gray-700 rounded-2xl px-5 py-3 shadow-sm"
               >
                 <h3 className={`text-2xl font-bold ${item.color}`}>
                   {item.value}
                 </h3>
 
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                   {item.label}
                 </p>
               </div>
@@ -187,7 +187,7 @@ const LandingPage = () => {
         >
           <div className="absolute -top-10 -right-10 w-72 h-72 bg-blue-300 opacity-20 blur-3xl rounded-full"></div>
 
-          <div className="backdrop-blur-xl bg-white/70 dark:bg-white/10 border border-white/30 shadow-xl rounded-3xl p-8 relative z-10">
+          <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-gray-700 shadow-xl rounded-3xl p-8 relative z-10">
 
             <h2 className="text-2xl font-bold mb-8 text-center text-gray-800 dark:text-white">
               Select Your Path
@@ -198,7 +198,7 @@ const LandingPage = () => {
                 key={index}
                 whileHover={{ scale: 1.05 }}
                 onClick={() => navigate(item.path)}
-                className="flex items-center gap-4 p-5 mb-4 rounded-xl bg-white/60 dark:bg-white/10 border hover:bg-blue-600 hover:text-white cursor-pointer transition"
+                className="flex items-center gap-4 p-5 mb-4 rounded-xl bg-gray-50 dark:bg-[#1f2937] border border-gray-200 dark:border-gray-600 text-gray-800 dark:text-white hover:bg-blue-600 hover:text-white cursor-pointer transition"
               >
                 <div className="text-xl">{item.icon}</div>
                 <div>
@@ -211,27 +211,27 @@ const LandingPage = () => {
         </motion.div>
 
         {/* PROCESS SECTION */}
-        <section id="process" className="py-16 px-6 md:px-10 bg-white">
-          <h2 className="text-2xl md:text-4xl font-bold text-center mb-10">Our Process</h2>
+        <section id="process" className="py-16 px-6 md:px-10 bg-white dark:bg-gray-950">
+          <h2 className="text-2xl md:text-4xl font-bold text-center mb-10 text-black dark:text-white">Our Process</h2>
           <div className="grid md:grid-cols-4 gap-6">
             {["Create Profile", "Upload Resume", "Get AI Insights", "Apply & Get Placed"].map((step, i) => (
-              <div key={i} className="bg-blue-50 p-6 rounded-2xl shadow-sm text-center">
+              <div key={i} className="bg-blue-50 dark:bg-blue-950/30 text-black dark:text-white p-6 rounded-2xl shadow-sm text-center">
                 <div className="text-3xl font-bold text-blue-600 mb-3">0{i + 1}</div>
-                <p className="font-medium">{step}</p>
+                <p className="font-medium text-black dark:text-gray-200">{step}</p>
               </div>
             ))}
           </div>
         </section>
 
         {/* COMPANIES */}
-        <section id="companies" className="py-20 px-6 md:px-10 bg-slate-50">
-          <h2 className="text-4xl font-bold text-center mb-14">Top Hiring Companies</h2>
+        <section id="companies" className="py-20 px-6 md:px-10 bg-slate-50 dark:bg-gray-900">
+          <h2 className="text-4xl font-bold text-center mb-14 text-black dark:text-white">Top Hiring Companies</h2>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
             {(dynamicCompanies.length
               ? dynamicCompanies
               : ["Google", "Microsoft", "Amazon", "Infosys", "TCS"]
             ).map((company, i) => (
-              <div key={i} className="bg-white rounded-2xl shadow px-8 py-6 text-center font-semibold flex items-center justify-center min-h-[100px]">
+              <div key={i} className="bg-white dark:bg-gray-800 text-black dark:text-white rounded-2xl shadow px-8 py-6 text-center font-semibold flex items-center justify-center min-h-[100px]">
                 {company}
               </div>
             ))}
@@ -239,17 +239,17 @@ const LandingPage = () => {
         </section>
 
         {/* SUCCESS STORIES */}
-        <section id="success" className="px-6 md:px-10 py-20 bg-white">
-          <h2 className="text-4xl font-bold text-center mb-14">Success Stories</h2>
+        <section id="success" className="px-6 md:px-10 py-20 bg-white dark:bg-gray-950">
+          <h2 className="text-4xl font-bold text-center mb-14 text-black dark:text-white">Success Stories</h2>
           <div className="grid md:grid-cols-2 gap-8">
             {(dynamicStories.length
               ? dynamicStories
               : stories
             ).map((story, index) => (
-              <div key={index} className="bg-blue-50 rounded-3xl p-8 shadow-md">
-                <p className="text-gray-700 mb-6 italic">“{story.text}”</p>
+              <div key={index} className="bg-blue-50 dark:bg-blue-950/30 text-black dark:text-white rounded-3xl p-8 shadow-md">
+                <p className="text-gray-700 dark:text-gray-300 mb-6 italic">“{story.text}”</p>
                 <h3 className="text-xl font-bold text-blue-700">{story.name}</h3>
-                <p className="text-gray-500">{story.role}</p>
+                <p className="text-gray-500 dark:text-gray-400">{story.role}</p>
               </div>
             ))}
           </div>
@@ -257,9 +257,9 @@ const LandingPage = () => {
 
 
         {/* HELP */}
-        <section id="help" className="py-20 px-6 md:px-10 bg-[#dbe4f0]  text-center">
-          <h2 className="text-4xl font-bold mb-6 text-black">Need Help?</h2>
-          <p className="max-w-2xl mx-auto text-black mb-8">
+        <section id="help" className="py-20 px-6 md:px-10 bg-[#dbe4f0] dark:bg-gray-900  text-center">
+          <h2 className="text-4xl font-bold mb-6 text-black dark:text-white">Need Help?</h2>
+          <p className="max-w-2xl mx-auto text-black dark:text-gray-300  mb-8">
             Our AI assistant helps you with resumes, placement preparation,
             mock interviews, and job applications.
           </p>
@@ -275,7 +275,7 @@ const LandingPage = () => {
 
           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
 
-            <div className="bg-white w-[95%] max-w-md rounded-3xl shadow-2xl p-5">
+            <div className="bg-white dark:bg-gray-900 dark:text-white border dark:border-gray-700 w-[95%] max-w-md rounded-3xl shadow-2xl p-5">
 
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold">
@@ -284,21 +284,21 @@ const LandingPage = () => {
 
                 <button
                   onClick={() => setShowChatbot(false)}
-                  className="text-gray-500 text-sm"
+                  className="text-gray-500 dark:text-gray-400 text-sm"
                 >
                   Close
                 </button>
               </div>
 
-              <div className="h-80 overflow-y-auto space-y-3 border rounded-2xl p-3 bg-gray-50">
+              <div className="h-80 overflow-y-auto space-y-3 border dark:border-gray-700 rounded-2xl p-3 bg-gray-50 dark:bg-gray-800">
 
                 {messages.map((msg, index) => (
 
                   <div
                     key={index}
                     className={`p-3 rounded-2xl max-w-[80%] text-sm ${msg.role === "user"
-                        ? "bg-blue-600 text-white ml-auto"
-                        : "bg-white border"
+                      ? "bg-blue-600 hover:bg-blue-700 transition text-white ml-auto"
+                      : "bg-white dark:bg-gray-900 border dark:border-gray-700"
                       }`}
                   >
                     {msg.text}
@@ -320,12 +320,12 @@ const LandingPage = () => {
                     }
                   }}
                   placeholder="Ask something..."
-                  className="flex-1 border rounded-xl px-3 py-2 outline-none"
+                  className="flex-1 border dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-xl px-3 py-2 outline-none"
                 />
 
                 <button
                   onClick={handleSend}
-                  className="bg-blue-600 text-white px-4 rounded-xl"
+                  className="bg-blue-600 hover:bg-blue-700 transition text-white px-4 rounded-xl"
                 >
                   Send
                 </button>

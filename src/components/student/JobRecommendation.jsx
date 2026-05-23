@@ -51,10 +51,10 @@ function JobRecommendation() {
   }, [recommendations, search]);
 
   return (
-    <div className="w-full min-h-screen p-4 md:p-6 lg:p-8 space-y-5 bg-gradient-to-br from-[#eef2ff] via-white to-[#f8fafc]">
+    <div className="w-full min-h-screen p-4 md:p-6 lg:p-8 space-y-5 bg-gradient-to-br from-[#eef2ff] via-white to-[#f8fafc] dark:from-gray-950 dark:via-gray-900 dark:to-black dark:text-white">
       <div>
         <h1 className="text-2xl font-bold">Job Recommendations</h1>
-        <p className="text-gray-500 text-sm mt-1">
+        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
           {resumeData
             ? `${jobData?.total_jobs_matched ?? 0} jobs matched via AI (cosine similarity + skill gaps)`
             : "Upload your resume on the Dashboard to get personalized matches"}
@@ -62,7 +62,7 @@ function JobRecommendation() {
       </div>
 
       {!resumeData && !loading && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800 flex gap-2">
+        <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 rounded-xl p-4 text-sm text-amber-800 flex gap-2">
           <AlertTriangle size={18} className="shrink-0" />
           <span>
             No AI recommendations yet. Go to Dashboard → Upload Resume to run the full pipeline.
@@ -71,7 +71,7 @@ function JobRecommendation() {
       )}
 
       {missingSkills.length > 0 && (
-        <div className="bg-white rounded-xl border p-4 shadow-sm">
+        <div className="bg-white dark:bg-gray-900 rounded-xl border dark:border-gray-700 p-4 shadow-sm">
           <h3 className="font-semibold text-sm mb-2 flex items-center gap-2">
             <TrendingUp size={16} className="text-blue-600" />
             Top Missing Skills
@@ -80,7 +80,7 @@ function JobRecommendation() {
             {missingSkills.map((skill) => (
               <span
                 key={skill}
-                className="text-xs bg-red-50 text-red-700 border border-red-100 px-2 py-1 rounded-full"
+                className="text-xs bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300 border border-red-100 dark:border-red-900 px-2 py-1 rounded-full"
               >
                 {skill}
               </span>
@@ -97,7 +97,7 @@ function JobRecommendation() {
         <input
           type="text"
           placeholder="Search recommended jobs..."
-          className="w-full pl-9 pr-3 py-2 border rounded-lg outline-none bg-white"
+          className="w-full pl-9 pr-3 py-2 border dark:border-gray-700 rounded-lg outline-none bg-white dark:bg-gray-900 dark:text-white"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -105,7 +105,7 @@ function JobRecommendation() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
         {filtered.length === 0 ? (
-          <div className="col-span-full bg-white rounded-xl border p-8 text-center text-gray-500">
+          <div className="col-span-full bg-white dark:bg-gray-900 rounded-xl border dark:border-gray-700 p-8 text-center text-gray-500 dark:text-gray-400">
             {resumeData
               ? "No jobs match your search."
               : `Profile skills (${savedProfile.skills?.length || 0}) — upload resume for AI job matching.`}
@@ -117,9 +117,9 @@ function JobRecommendation() {
             return (
               <div
                 key={jobId}
-                className="bg-white rounded-xl p-5 border shadow-sm flex gap-4 hover:shadow-md transition border-gray-200"
+                className="bg-white dark:bg-gray-900 rounded-xl p-5 border dark:border-gray-700 shadow-sm flex gap-4 hover:shadow-md transition border-gray-200"
               >
-                <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-lg font-bold text-blue-700">
+                <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/30 flex items-center justify-center text-lg font-bold text-blue-700">
                   {(job.company || "?").charAt(0)}
                 </div>
 
@@ -127,7 +127,7 @@ function JobRecommendation() {
                   <div className="flex justify-between gap-2">
                     <div>
                       <h3 className="font-semibold truncate">{job.title}</h3>
-                      <p className="text-sm text-gray-500">{job.company}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{job.company}</p>
                     </div>
                     <button
                       type="button"
@@ -150,15 +150,15 @@ function JobRecommendation() {
                   </div>
 
                   <div className="mt-2 flex items-center gap-2 flex-wrap">
-                    <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+                    <span className="text-xs font-bold text-blue-600 bg-blue-50 dark:bg-blue-950/30 px-2 py-0.5 rounded">
                       {Math.round(rec.match_score ?? 0)}% match
                     </span>
-                    <span className="text-xs text-gray-500 capitalize">
+                    <span className="text-xs text-gray-500 dark:text-gray-400 capitalize">
                       {rec.confidence || rec.match_category}
                     </span>
                   </div>
 
-                  <div className="flex gap-3 mt-2 text-xs text-gray-500 flex-wrap">
+                  <div className="flex gap-3 mt-2 text-xs text-gray-500 dark:text-gray-400 flex-wrap">
                     {job.location && (
                       <span className="flex items-center gap-1">
                         <MapPin size={12} />
@@ -189,7 +189,7 @@ function JobRecommendation() {
                     {(job.required_skills || []).slice(0, 4).map((tag) => (
                       <span
                         key={tag}
-                        className="text-xs bg-gray-100 px-2 py-0.5 rounded"
+                        className="text-xs bg-gray-100 dark:bg-gray-800 dark:text-gray-200 px-2 py-0.5 rounded"
                       >
                         {tag}
                       </span>

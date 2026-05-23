@@ -7,8 +7,8 @@ import {
   Users,
   Calendar,
   MoreHorizontal,
-  Trash2 ,
-    X,
+  Trash2,
+  X,
 } from "lucide-react";
 
 const initialJobs = [
@@ -56,77 +56,79 @@ function PostJob() {
     return matchSearch && matchFilter;
   });
 
-const handlePost = () => {
-  if (
-    !form.company ||
-    !form.role ||
-    !form.location ||
-    !form.type
-  ) {
-    alert("Fill all fields");
-    return;
-  }
+  const handlePost = () => {
+    if (
+      !form.company ||
+      !form.role ||
+      !form.location ||
+      !form.type
+    ) {
+      alert("Fill all fields");
+      return;
+    }
 
-  setJobs([
-    ...jobs,
-    {
-      id: Date.now(),
-      title: form.role,
-      dept: form.company,
-      company: form.company,
-      role: form.role,
-      type: form.type,
-      location: form.location,
-      description: form.description,
-      package: form.package,
-      applicants: 0,
-      date: new Date().toDateString(),
-      status: "LIVE",
-    },
-  ]);
+    setJobs([
+      ...jobs,
+      {
+        id: Date.now(),
+        title: form.role,
+        dept: form.company,
+        company: form.company,
+        role: form.role,
+        type: form.type,
+        location: form.location,
+        description: form.description,
+        package: form.package,
+        applicants: 0,
+        date: new Date().toDateString(),
+        status: "LIVE",
+      },
+    ]);
 
-  setForm({
-    company: "",
-    role: "",
-    description: "",
-    skills: "",
-    package: "",
-    eligibility: "",
-    cgpa: "",
-    location: "",
-    deadline: "",
-    type: "",
-    applyLink: "",
-  });
+    setForm({
+      company: "",
+      role: "",
+      description: "",
+      skills: "",
+      package: "",
+      eligibility: "",
+      cgpa: "",
+      location: "",
+      deadline: "",
+      type: "",
+      applyLink: "",
+    });
 
-  setOpen(false);
-};
+    setOpen(false);
+  };
   const toggleStatus = (id) => {
-  setJobs((prev) =>
-    prev.map((job) => {
-      if (job.id !== id) return job;
+    setJobs((prev) =>
+      prev.map((job) => {
+        if (job.id !== id) return job;
 
-      let newStatus;
-      if (job.status === "LIVE") newStatus = "CLOSED";
-      else if (job.status === "CLOSED") newStatus = "DRAFT";
-      else newStatus = "LIVE";
+        let newStatus;
+        if (job.status === "LIVE") newStatus = "CLOSED";
+        else if (job.status === "CLOSED") newStatus = "DRAFT";
+        else newStatus = "LIVE";
 
-      return { ...job, status: newStatus };
-    })
-  );
-};
+        return { ...job, status: newStatus };
+      })
+    );
+  };
 
-const deleteJob = (id) => {
-  setJobs((prev) => prev.filter((job) => job.id !== id));
-};
+  const deleteJob = (id) => {
+    setJobs((prev) => prev.filter((job) => job.id !== id));
+  };
   return (
-    <div className="max-w-6xl space-y-5">
+    <div className="w-full max-w-none space-y-5">
 
       {/* HEADER */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold">Job Postings</h1>
-          <p className="text-sm text-gray-500">
+          <h1 className="text-2xl font-bold text-black dark:text-white">
+            Job Postings
+          </h1>
+          <p className="text-sm text-gray-400">
             {jobs.filter((j) => j.status === "LIVE").length} active postings
           </p>
         </div>
@@ -144,7 +146,7 @@ const deleteJob = (id) => {
         <div className="relative flex-1 max-w-sm">
           <Search size={14} className="absolute left-3 top-2 text-gray-400" />
           <input
-            className="pl-8 border rounded px-3 py-2 w-full"
+            className="pl-8 border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#111827] text-black dark:text-white rounded px-3 py-2 w-full"
             placeholder="Search jobs..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -156,11 +158,10 @@ const deleteJob = (id) => {
             <button
               key={f}
               onClick={() => setFilter(f)}
-             className={`px-3 py-1.5 rounded-lg text-sm border ${
-  filter === f
-    ? "!bg-blue-600 !text-white"
-    : "!bg-gray-200 !text-black"
-}`}
+              className={`px-3 py-1.5 rounded-lg text-sm border ${filter === f
+                  ? "!bg-blue-600 !text-white"
+                  : "bg-white dark:!bg-[#1e293b] text-black dark:!text-white border-gray-300 dark:border-gray-700"
+                }`}
             >
               {f}
             </button>
@@ -173,7 +174,7 @@ const deleteJob = (id) => {
         {filtered.map((job) => (
           <div
             key={job.id}
-            className="bg-white rounded-xl border shadow-sm p-5 flex flex-col gap-3 hover:shadow-md"
+            className="bg-white dark:bg-[#0f172a] border border-gray-200 dark:border-gray-700 text-black dark:text-white rounded-xl shadow-sm p-5 flex flex-col gap-3 hover:shadow-md"
           >
             <div className="flex justify-between">
               <div className="w-10 h-10 bg-blue-100 flex items-center justify-center rounded-lg">
@@ -194,7 +195,7 @@ const deleteJob = (id) => {
                 <button onClick={() => deleteJob(job.id)}
                   className="p-1 rounded hover:bg-red-100 text-red-500"
                 >
-                   <Trash2 size={10} />
+                  <Trash2 size={10} />
                 </button>
 
               </div>
@@ -202,7 +203,7 @@ const deleteJob = (id) => {
 
             <div>
               <h3 className="font-semibold">{job.title}</h3>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 {job.dept} • {job.type}
               </p>
               <p className="text-xs text-gray-400 mt-2">
@@ -210,7 +211,7 @@ const deleteJob = (id) => {
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-3 text-xs text-gray-500 mt-auto pt-2 border-t">
+            <div className="flex flex-wrap gap-3 text-xs text-gray-500 dark:text-gray-400 mt-auto pt-2 border-t border-gray-200 dark:border-gray-700">
               <span className="flex items-center gap-1">
                 <MapPin size={12} /> {job.location}
               </span>
@@ -225,168 +226,168 @@ const deleteJob = (id) => {
         ))}
       </div>
 
-     {/* MODAL */}
-{open && (
-  <div className="fixed inset-0 bg-black/40 z-50 overflow-y-auto p-4">
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-5 space-y-4">
+      {/* MODAL */}
+      {open && (
+        <div className="fixed inset-0 bg-black/40 z-50 overflow-y-auto p-4">
+          <div className="min-h-screen flex items-center justify-center">
+            <div className="w-full max-w-md bg-white dark:bg-[#0f172a] text-black dark:text-white border border-gray-200 dark:border-gray-700 rounded-2xl shadow-2xl p-5 space-y-4">
 
-        {/* HEADER */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold">
-              Create New Job
-            </h2>
+              {/* HEADER */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold">
+                    Create New Job
+                  </h2>
 
-            <p className="text-gray-500 text-sm">
-              Add a new placement opportunity
-            </p>
+                  <p className="text-gray-500 text-sm">
+                    Add a new placement opportunity
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => setOpen(false)}
+                  className="p-1 rounded hover:bg-red-100 text-red-500"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+
+              {/* FORM */}
+              <div className="grid md:grid-cols-2 gap-5">
+
+                <input
+                  placeholder="Company Name"
+                  className="h-12 rounded-2xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#111827] text-black dark:text-white px-4 outline-none"
+                  value={form.company}
+                  onChange={(e) =>
+                    setForm({ ...form, company: e.target.value })
+                  }
+                />
+
+                <input
+                  placeholder="Role Title"
+                  className="h-12 rounded-2xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#111827] text-black dark:text-white px-4 outline-none"
+                  value={form.role}
+                  onChange={(e) =>
+                    setForm({ ...form, role: e.target.value })
+                  }
+                />
+
+                <input
+                  placeholder="Package / Salary"
+                  className="h-12 rounded-2xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#111827] text-black dark:text-white px-4 outline-none"
+                  value={form.package}
+                  onChange={(e) =>
+                    setForm({ ...form, package: e.target.value })
+                  }
+                />
+
+                <input
+                  placeholder="Location"
+                  className="h-12 rounded-2xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#111827] text-black dark:text-white px-4 outline-none"
+                  value={form.location}
+                  onChange={(e) =>
+                    setForm({ ...form, location: e.target.value })
+                  }
+                />
+
+                <input
+                  placeholder="CGPA Requirement"
+                  className="h-12 rounded-2xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#111827] text-black dark:text-white px-4 outline-none"
+                  value={form.cgpa}
+                  onChange={(e) =>
+                    setForm({ ...form, cgpa: e.target.value })
+                  }
+                />
+
+                <select
+                  className="h-12 rounded-2xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#111827] text-black dark:text-white px-4 outline-none"
+                  value={form.type}
+                  onChange={(e) =>
+                    setForm({ ...form, type: e.target.value })
+                  }
+                >
+                  <option value="">Job Type</option>
+                  <option>Full-time</option>
+                  <option>Internship</option>
+                </select>
+
+                <input
+                  type="date"
+                  className="h-12 rounded-2xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#111827] text-black dark:text-white px-4 outline-none"
+                  value={form.deadline}
+                  onChange={(e) =>
+                    setForm({ ...form, deadline: e.target.value })
+                  }
+                />
+
+                <input
+                  placeholder="Apply Link"
+                  className="h-12 rounded-2xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#111827] text-black dark:text-white px-4 outline-none"
+                  value={form.applyLink}
+                  onChange={(e) =>
+                    setForm({ ...form, applyLink: e.target.value })
+                  }
+                />
+
+                <textarea
+                  rows={3}
+                  placeholder="Required Skills (comma separated)"
+                  className="rounded-2xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#111827] text-black dark:text-white p-4 outline-none md:col-span-2"
+                  value={form.skills}
+                  onChange={(e) =>
+                    setForm({ ...form, skills: e.target.value })
+                  }
+                />
+
+                <textarea
+                  rows={3}
+                  placeholder="Eligibility Criteria"
+                  className="rounded-2xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#111827] text-black dark:text-white p-4 outline-none md:col-span-2"
+                  value={form.eligibility}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      eligibility: e.target.value,
+                    })
+                  }
+                />
+
+                <textarea
+                  rows={4}
+                  placeholder="Job Description"
+                  className="rounded-2xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#111827] text-black dark:text-white p-4 outline-none md:col-span-2"
+                  value={form.description}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      description: e.target.value,
+                    })
+                  }
+                />
+              </div>
+
+              {/* BUTTONS */}
+              <div className="flex justify-end gap-3 pt-2">
+                <button
+                  onClick={() => setOpen(false)}
+                  className="px-5 py-2 rounded-xl border border-gray-300 dark:border-gray-700"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  onClick={handlePost}
+                  className="bg-indigo-700 hover:bg-indigo-800 text-white px-6 py-2 rounded-xl transition-all"
+                >
+                  Publish Job
+                </button>
+              </div>
+
+            </div>
           </div>
-
-          <button
-            onClick={() => setOpen(false)}
-            className="p-1 rounded hover:bg-red-100 text-red-500"
-          >
-            <X size={18} />
-          </button>
         </div>
-
-        {/* FORM */}
-<div className="grid md:grid-cols-2 gap-5">
-
-  <input
-    placeholder="Company Name"
-    className="h-12 rounded-2xl border px-4 outline-none"
-    value={form.company}
-    onChange={(e) =>
-      setForm({ ...form, company: e.target.value })
-    }
-  />
-
-  <input
-    placeholder="Role Title"
-    className="h-12 rounded-2xl border px-4 outline-none"
-    value={form.role}
-    onChange={(e) =>
-      setForm({ ...form, role: e.target.value })
-    }
-  />
-
-  <input
-    placeholder="Package / Salary"
-    className="h-12 rounded-2xl border px-4 outline-none"
-    value={form.package}
-    onChange={(e) =>
-      setForm({ ...form, package: e.target.value })
-    }
-  />
-
-  <input
-    placeholder="Location"
-    className="h-12 rounded-2xl border px-4 outline-none"
-    value={form.location}
-    onChange={(e) =>
-      setForm({ ...form, location: e.target.value })
-    }
-  />
-
-  <input
-    placeholder="CGPA Requirement"
-    className="h-12 rounded-2xl border px-4 outline-none"
-    value={form.cgpa}
-    onChange={(e) =>
-      setForm({ ...form, cgpa: e.target.value })
-    }
-  />
-
-  <select
-    className="h-12 rounded-2xl border px-4 outline-none"
-    value={form.type}
-    onChange={(e) =>
-      setForm({ ...form, type: e.target.value })
-    }
-  >
-    <option value="">Job Type</option>
-    <option>Full-time</option>
-    <option>Internship</option>
-  </select>
-
-  <input
-    type="date"
-    className="h-12 rounded-2xl border px-4 outline-none"
-    value={form.deadline}
-    onChange={(e) =>
-      setForm({ ...form, deadline: e.target.value })
-    }
-  />
-
-  <input
-    placeholder="Apply Link"
-    className="h-12 rounded-2xl border px-4 outline-none"
-    value={form.applyLink}
-    onChange={(e) =>
-      setForm({ ...form, applyLink: e.target.value })
-    }
-  />
-
-  <textarea
-    rows={3}
-    placeholder="Required Skills (comma separated)"
-    className="rounded-2xl border p-4 outline-none md:col-span-2"
-    value={form.skills}
-    onChange={(e) =>
-      setForm({ ...form, skills: e.target.value })
-    }
-  />
-
-  <textarea
-    rows={3}
-    placeholder="Eligibility Criteria"
-    className="rounded-2xl border p-4 outline-none md:col-span-2"
-    value={form.eligibility}
-    onChange={(e) =>
-      setForm({
-        ...form,
-        eligibility: e.target.value,
-      })
-    }
-  />
-
-  <textarea
-    rows={4}
-    placeholder="Job Description"
-    className="rounded-2xl border p-4 outline-none md:col-span-2"
-    value={form.description}
-    onChange={(e) =>
-      setForm({
-        ...form,
-        description: e.target.value,
-      })
-    }
-  />
-</div>
-
-        {/* BUTTONS */}
-        <div className="flex justify-end gap-3 pt-2">
-          <button
-            onClick={() => setOpen(false)}
-            className="px-5 py-2 rounded-xl border"
-          >
-            Cancel
-          </button>
-
-          <button
-            onClick={handlePost}
-            className="bg-indigo-700 hover:bg-indigo-800 text-white px-6 py-2 rounded-xl transition-all"
-          >
-            Publish Job
-          </button>
-        </div>
-
-      </div>
-    </div>
-  </div>
-)}
+      )}
     </div>
   );
 }

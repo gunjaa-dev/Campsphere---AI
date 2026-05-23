@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { ThemeContext } from "../context/ThemeContext";
 
 import {
   LayoutDashboard,
@@ -15,6 +16,7 @@ import {
   MessageCircle,
   X,
   Menu,
+  Moon,
 } from "lucide-react";
 
 const sidebarConfig = {
@@ -53,6 +55,8 @@ function Sidebar() {
 
   const [submitted, setSubmitted] =
     useState(false);
+  const { darkMode, setDarkMode } =
+    useContext(ThemeContext);
 
   useEffect(() => {
     const storedRole = localStorage.getItem("role") || "student";
@@ -72,6 +76,9 @@ function Sidebar() {
     localStorage.clear();
     navigate("/");
   };
+
+
+
   const handleSupportSubmit = () => {
 
     const tickets =
@@ -104,7 +111,7 @@ function Sidebar() {
   return (
     <>
       <aside
-        className={`hidden md:flex flex-col sticky top-0 h-screen bg-gradient-to-b from-[#f8fafc] to-[#eef2ff] py-6 transition-all duration-300 ${collapsed ? "w-24 px-3" : "w-64 pr-4"
+        className={`hidden md:flex flex-col sticky top-0 h-screen bg-gradient-to-b from-[#f8fafc] to-[#eef2ff] dark:from-black dark:to-black dark:border-r dark:border-gray-800 py-6 transition-all duration-300 ${collapsed ? "w-24 px-3" : "w-64 pr-4"
           }`}
       >
 
@@ -119,13 +126,13 @@ function Sidebar() {
           {/* LOGO */}
           {collapsed ? (
 
-            <div className="w-9 h-9 rounded-xl bg-[#24389c] text-white flex items-center justify-center font-bold text-lg shadow-sm transition-all duration-300 group-hover:opacity-0">
+            <div className="w-9 h-9 rounded-xl bg-[#24389c] dark:bg-blue-700 text-white flex items-center justify-center font-bold text-lg shadow-sm transition-all duration-300 group-hover:opacity-0">
               C
             </div>
 
           ) : (
 
-            <h2 className="text-2xl font-extrabold text-[#24389c] tracking-tight">
+            <h2 className="text-2xl font-extrabold text-[#24389c] dark:text-blue-400 tracking-tight transition">
               CampSphere
             </h2>
 
@@ -134,7 +141,7 @@ function Sidebar() {
           {/* MENU BUTTON */}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className={`absolute p-2 rounded-lg hover:bg-white hover:shadow-sm transition-all duration-300 ${collapsed
+            className={`absolute p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-900 hover:shadow-sm transition-all duration-300 ${collapsed
               ? "opacity-0 group-hover:opacity-100"
               : "right-2 opacity-100"
               }`}
@@ -160,9 +167,8 @@ function Sidebar() {
                   ? "justify-center"
                   : "gap-3"
                 } px-3 py-2.5 rounded-lg text-sm transition-all duration-300 ${isActive
-                  ? "bg-white text-[#24389c] shadow-md border border-gray-200"
-                  : "text-gray-600 hover:bg-white hover:shadow-sm hover:text-[#24389c]"
-                }`
+                  ? "bg-white dark:bg-gray-900 text-[#24389c] dark:text-blue-400 shadow-md border border-gray-200 dark:border-gray-700"
+                  : "text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-800 hover:shadow-sm hover:text-[#24389c] dark:hover:text-blue-400"}`
               }
             >
               <Icon size={18} />
@@ -172,7 +178,7 @@ function Sidebar() {
         </nav>
 
         {/* FOOTER */}
-        <div className="p-3 border-t space-y-1">
+        <div className="p-3 border-t border-gray-200 dark:border-gray-700 space-y-1">
           {[
             {
               icon: HelpCircle,
@@ -188,8 +194,7 @@ function Sidebar() {
             <button
               key={label}
               onClick={action}
-              className={`flex items-center h-10 w-full rounded-xl text-sm font-medium text-gray-500
-hover:text-black hover:bg-gray-100 transition-all px-3 ${collapsed ? "justify-center" : "gap-3"
+              className={`flex items-center h-10 w-full rounded-xl text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all px-3 ${collapsed ? "justify-center" : "gap-3"
                 }`}
             >
               <Icon size={18} />
@@ -197,16 +202,45 @@ hover:text-black hover:bg-gray-100 transition-all px-3 ${collapsed ? "justify-ce
             </button>
           ))}
         </div>
+        {/* DARK MODE */}
+        <div
+          className={`flex items-center h-10 w-full rounded-xl text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all px-3 ${collapsed ? "justify-center" : "justify-between"
+            }`}
+        >
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className={`flex items-center h-10 w-full rounded-xl text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all px-3 ${collapsed ? "justify-center" : "gap-3"
+              }`}
+          >
+
+            <Moon
+              size={18}
+              className={`transition ${darkMode
+                ? "text-yellow-400"
+                : "text-gray-500"
+                }`}
+            />
+
+            {!collapsed && (
+              <span>
+                Dark Mode
+              </span>
+            )}
+
+          </button>
+
+        </div>
       </aside>
+
 
       {/* SUPPORT MODAL */}
       {showSupport && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white w-[350px] p-6 rounded-xl relative">
+          <div className="bg-white dark:bg-gray-900 dark:text-white w-[350px] p-6 rounded-xl relative">
 
             <button
               onClick={() => setShowSupport(false)}
-              className="absolute top-3 right-3 text-gray-500"
+              className="absolute top-3 right-3 text-gray-500 dark:text-gray-400"
             >
               <X size={18} />
             </button>
@@ -215,7 +249,7 @@ hover:text-black hover:bg-gray-100 transition-all px-3 ${collapsed ? "justify-ce
               <HelpCircle size={18} /> AI Support Assistant
             </h2>
 
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
               Need help? Our support team is available Monday–Friday, 9 AM – 6 PM IST.
             </p>
 
@@ -233,7 +267,7 @@ hover:text-black hover:bg-gray-100 transition-all px-3 ${collapsed ? "justify-ce
                   onChange={(e) =>
                     setSupportType(e.target.value)
                   }
-                  className="w-full mt-1 border rounded-lg p-2 text-sm"
+                  className="w-full mt-1 border dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg p-2 text-sm"
                 >
                   <option>Technical Issue</option>
                   <option>Profile Problem</option>
@@ -257,9 +291,9 @@ hover:text-black hover:bg-gray-100 transition-all px-3 ${collapsed ? "justify-ce
                   }
                   rows={4}
                   placeholder="Explain your issue..."
-                  className="w-full mt-1 border rounded-lg p-2 text-sm resize-none"
+                  className="w-full mt-1 border dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg p-2 text-sm resize-none"
                 />
-                <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 text-xs text-blue-700">
+                <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900 rounded-lg p-3 text-xs text-blue-700 dark:text-blue-300">
 
                   <p className="font-semibold mb-1">
                     Suggested Help
@@ -295,13 +329,13 @@ hover:text-black hover:bg-gray-100 transition-all px-3 ${collapsed ? "justify-ce
 
                   <div
                     key={ticket.id}
-                    className="bg-gray-50 border rounded-lg p-2 text-xs"
+                    className="bg-gray-50 dark:bg-gray-800 border dark:border-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg p-2 text-xs"
                   >
                     <p className="font-medium">
                       {ticket.type}
                     </p>
 
-                    <p className="text-gray-500 truncate">
+                    <p className="text-gray-500 dark:text-gray-400 truncate">
                       {ticket.message}
                     </p>
                   </div>
@@ -312,7 +346,7 @@ hover:text-black hover:bg-gray-100 transition-all px-3 ${collapsed ? "justify-ce
               <button
                 onClick={handleSupportSubmit}
                 disabled={!supportMessage.trim()}
-                className="w-full bg-[#24389c] text-white py-2 rounded-lg hover:bg-[#1d2f82] transition-all duration-300 disabled:opacity-50"
+                className="w-full bg-[#24389c] dark:bg-blue-700 text-white py-2 rounded-lg hover:bg-[#1d2f82] transition-all duration-300 disabled:opacity-50"
               >
                 Send Request
               </button>
@@ -325,18 +359,18 @@ hover:text-black hover:bg-gray-100 transition-all px-3 ${collapsed ? "justify-ce
       {/* LOGOUT MODAL */}
       {showLogout && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-xl w-[320px]">
+          <div className="bg-white dark:bg-gray-900 dark:text-white p-6 rounded-xl w-[320px]">
 
             <h2 className="font-semibold mb-3">Log out of CampSphere?</h2>
 
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
               You'll be signed out. Unsaved changes will be lost.
             </p>
 
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setShowLogout(false)}
-                className="px-3 py-1 border rounded"
+                className="px-3 py-1 border dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded"
               >
                 Cancel
               </button>

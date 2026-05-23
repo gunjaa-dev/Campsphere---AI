@@ -156,18 +156,18 @@ function UserManagement() {
   };
 
   return (
-    <div className=" w-full min-h-screen bg-[#f5f7fb] ">
-  <div className="w-full  p-4 md:p-6 space-y-6 min-w-0">
+    <div className="w-full min-h-screen bg-[#f5f7fb] dark:bg-black text-black dark:text-white">
+      <div className="w-full  p-4 md:p-6 space-y-6 min-w-0">
 
 
         {/* HEADER */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
               User Management
             </h1>
 
-            <p className="text-gray-500 mt-1">
+            <p className="text-gray-500 dark:text-gray-400 mt-1">
               Manage students, recruiters and admins
             </p>
           </div>
@@ -183,47 +183,47 @@ function UserManagement() {
         {/* STATS */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
 
-          <div className="bg-white rounded-3xl p-5 shadow-sm flex items-center gap-4">
+          <div className="bg-white dark:bg-gray-900 rounded-3xl p-5 shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-indigo-100 flex items-center justify-center">
               <Users className="text-indigo-600" />
             </div>
 
             <div>
               <h2 className="text-2xl font-bold">20</h2>
-              <p className="text-sm text-gray-500">Total Users</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Total Users</p>
             </div>
           </div>
 
-          <div className="bg-white rounded-3xl p-5 shadow-sm flex items-center gap-4">
+          <div className="bg-white dark:bg-gray-900 rounded-3xl p-5 shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-yellow-100 flex items-center justify-center">
               <GraduationCap className="text-yellow-600" />
             </div>
 
             <div>
               <h2 className="text-2xl font-bold">11</h2>
-              <p className="text-sm text-gray-500">Students</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Students</p>
             </div>
           </div>
 
-          <div className="bg-white rounded-3xl p-5 shadow-sm flex items-center gap-4">
+          <div className="bg-white dark:bg-gray-900 rounded-3xl p-5 shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-purple-100 flex items-center justify-center">
               <Briefcase className="text-purple-600" />
             </div>
 
             <div>
               <h2 className="text-2xl font-bold">6</h2>
-              <p className="text-sm text-gray-500">Recruiters</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Recruiters</p>
             </div>
           </div>
 
-          <div className="bg-white rounded-3xl p-5 shadow-sm flex items-center gap-4">
+          <div className="bg-white dark:bg-gray-900 rounded-3xl p-5 shadow-sm border border-gray-200 dark:border-gray-700 flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-green-100 flex items-center justify-center">
               <UserCheck className="text-green-600" />
             </div>
 
             <div>
               <h2 className="text-2xl font-bold">15</h2>
-              <p className="text-sm text-gray-500">Active Users</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Active Users</p>
             </div>
           </div>
         </div>
@@ -231,16 +231,15 @@ function UserManagement() {
         {/* FILTERS */}
         <div className="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between">
 
-          <div className="flex flex-wrap gap-2 bg-gray-200 p-2 rounded-2xl w-fit">
+          <div className="flex flex-wrap gap-2 bg-gray-200 dark:bg-gray-800 p-2 rounded-2xl w-fit">
             {tabs.map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-5 py-2 rounded-xl text-sm font-medium transition ${
-                  activeTab === tab
-                    ? "bg-white shadow text-black"
-                    : "text-gray-600"
-                }`}
+                className={`px-5 py-2 rounded-xl text-sm font-medium transition ${activeTab === tab
+                    ? "bg-white dark:bg-gray-900 shadow text-black dark:text-white"
+                    : "text-gray-600 dark:text-gray-400"
+                  }`}
               >
                 {tab}
               </button>
@@ -258,17 +257,17 @@ function UserManagement() {
               placeholder="Search users..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-white rounded-2xl border pl-11 pr-4 py-3 outline-none"
+              className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-black dark:text-white rounded-2xl pl-11 pr-4 py-3 outline-none"
             />
           </div>
         </div>
 
         {/* DESKTOP TABLE */}
-        <div className="hidden lg:block bg-white rounded-3xl shadow-sm overflow-hidden">
+        <div className="hidden lg:block bg-white dark:bg-gray-900 rounded-3xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
 
-              <thead className="bg-gray-50 text-gray-500 text-sm">
+              <thead className="bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-sm">
                 <tr>
                   <th className="text-left px-6 py-4">USER</th>
                   <th className="text-left">ROLE</th>
@@ -283,7 +282,7 @@ function UserManagement() {
                 {filteredUsers.map((user) => (
                   <tr
                     key={user.id}
-                    className="border-t hover:bg-gray-50"
+                    className="border-t border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-4">
@@ -294,7 +293,7 @@ function UserManagement() {
                           {user.initials}
                         </div>
 
-                        <h3 className="font-semibold text-gray-900">
+                        <h3 className="font-semibold text-gray-900 dark:text-white">
                           {user.name}
                         </h3>
                       </div>
@@ -318,12 +317,12 @@ function UserManagement() {
                       </span>
                     </td>
 
-                    <td className="text-gray-500">
+                    <td className="text-gray-500 dark:text-gray-400">
                       {user.joined}
                     </td>
 
                     <td>
-                      <div className="flex items-center gap-4 text-gray-500">
+                      <div className="flex items-center gap-4 text-gray-500 dark:text-gray-400">
                         <button
                           onClick={() => setSelectedUser(user)}
                           className="hover:text-indigo-600"
@@ -351,7 +350,7 @@ function UserManagement() {
           {filteredUsers.map((user) => (
             <div
               key={user.id}
-              className="bg-white rounded-3xl shadow-sm p-5"
+              className="bg-white dark:bg-gray-900 rounded-3xl shadow-sm border border-gray-200 dark:border-gray-700 p-5"
             >
               <div className="flex items-center gap-4">
 
@@ -366,7 +365,7 @@ function UserManagement() {
                     {user.name}
                   </h3>
 
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                     {user.email}
                   </p>
                 </div>
@@ -384,7 +383,7 @@ function UserManagement() {
                 </span>
               </div>
 
-              <div className="flex items-center gap-5 mt-5 text-gray-500 border-t pt-4">
+              <div className="flex items-center gap-5 mt-5 text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700 pt-4" >
                 <button
                   onClick={() => setSelectedUser(user)}
                   className="hover:text-indigo-600"
@@ -406,7 +405,7 @@ function UserManagement() {
         {/* MODAL */}
         {showAddModal && (
           <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
-            <div className="bg-white rounded-3xl w-full max-w-lg p-6 relative">
+            <div className="bg-white dark:bg-gray-900 text-black dark:text-white rounded-3xl w-full max-w-lg p-6 relative border border-gray-200 dark:border-gray-700">
 
               <button
                 onClick={() => setShowAddModal(false)}
@@ -428,7 +427,7 @@ function UserManagement() {
                   onChange={(e) =>
                     setNewUser({ ...newUser, name: e.target.value })
                   }
-                  className="w-full border rounded-2xl px-4 py-3 outline-none"
+                  className="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white rounded-2xl px-4 py-3 outline-none"
                 />
 
                 <input
@@ -438,7 +437,7 @@ function UserManagement() {
                   onChange={(e) =>
                     setNewUser({ ...newUser, email: e.target.value })
                   }
-                  className="w-full border rounded-2xl px-4 py-3 outline-none"
+                  className="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white rounded-2xl px-4 py-3 outline-none"
                 />
 
                 <select
@@ -446,7 +445,7 @@ function UserManagement() {
                   onChange={(e) =>
                     setNewUser({ ...newUser, role: e.target.value })
                   }
-                  className="w-full border rounded-2xl px-4 py-3 outline-none"
+                  className="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white rounded-2xl px-4 py-3 outline-none"
                 >
                   <option>Student</option>
                   <option>Recruiter</option>
@@ -458,7 +457,7 @@ function UserManagement() {
                   onChange={(e) =>
                     setNewUser({ ...newUser, status: e.target.value })
                   }
-                  className="w-full border rounded-2xl px-4 py-3 outline-none"
+                  className="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white rounded-2xl px-4 py-3 outline-none"
                 >
                   <option>Active</option>
                   <option>Pending</option>
@@ -478,7 +477,7 @@ function UserManagement() {
 
         {selectedUser && (
           <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
-            <div className="bg-white rounded-3xl w-full max-w-md p-6 relative">
+            <div className="bg-white dark:bg-gray-900 text-black dark:text-white rounded-3xl w-full max-w-md p-6 relative border border-gray-200 dark:border-gray-700">
 
               <button
                 onClick={() => setSelectedUser(null)}
@@ -499,25 +498,25 @@ function UserManagement() {
                   {selectedUser.name}
                 </h2>
 
-                <p className="text-gray-500 mt-1">
+                <p className="text-gray-500 dark:text-gray-400 mt-1">
                   {selectedUser.email}
                 </p>
               </div>
 
               <div className="space-y-4 mt-8">
 
-                <div className="flex justify-between border-b pb-3">
-                  <span className="text-gray-500">Role</span>
+                <div className="flex justify-between border-b border-gray-200 dark:border-gray-700 pb-3">
+                  <span className="text-gray-500 dark:text-gray-400">Role</span>
                   <span>{selectedUser.role}</span>
                 </div>
 
-                <div className="flex justify-between border-b pb-3">
-                  <span className="text-gray-500">Status</span>
+                <div className="flex justify-between border-b border-gray-200 dark:border-gray-700 pb-3">
+                  <span className="text-gray-500 dark:text-gray-400">Status</span>
                   <span>{selectedUser.status}</span>
                 </div>
 
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Joined</span>
+                  <span className="text-gray-500 dark:text-gray-400">Joined</span>
                   <span>{selectedUser.joined}</span>
                 </div>
               </div>

@@ -41,14 +41,14 @@ function AdminProfile() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] via-white to-[#f8fafc] p-6">
+        <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] via-white to-[#f8fafc] dark:from-black dark:via-black dark:to-black text-black dark:text-white p-6">
 
             {/* TOP BAR */}
             <div className="max-w-5xl mx-auto flex justify-between items-center mb-6">
 
                 <button
                     onClick={() => navigate("/admin-dashboard")}
-                    className="flex items-center gap-2 text-sm text-blue-600 hover:underline"
+                    className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:underline"
                 >
                     <ArrowLeft size={18} />
                     Back to Dashboard
@@ -68,7 +68,7 @@ function AdminProfile() {
 
                             <button
                                 onClick={() => setIsEditing(false)}
-                                className="flex items-center gap-2 px-4 py-2 border rounded-xl hover:bg-gray-100 transition"
+                                className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-900 transition"
                             >
                                 <X size={18} />
                                 Cancel
@@ -87,7 +87,7 @@ function AdminProfile() {
             </div>
 
             {/* PROFILE CARD */}
-            <div className="max-w-5xl mx-auto bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100">
+            <div className="max-w-5xl mx-auto bg-white dark:bg-gray-950 rounded-3xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-800">
 
                 {/* HEADER */}
                 <div className="bg-gradient-to-r from-[#24389c] to-[#4f46e5] px-8 py-10">
@@ -127,9 +127,9 @@ function AdminProfile() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                         {/* FULL NAME */}
-                        <div className="bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                        <div className="bg-gray-50 dark:bg-gray-900 p-5 rounded-2xl border border-gray-200 dark:border-gray-800">
 
-                            <div className="flex items-center gap-2 mb-3 text-gray-500">
+                            <div className="flex items-center gap-2 mb-3 text-gray-500 dark:text-gray-400">
                                 <User size={18} />
                                 <span>Full Name</span>
                             </div>
@@ -140,32 +140,32 @@ function AdminProfile() {
                                     name="fullName"
                                     value={profile.fullName}
                                     onChange={handleChange}
-                                    className="w-full p-3 rounded-xl border outline-none focus:ring-2 focus:ring-blue-300"
+                                    className="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             ) : (
-                                <p className="font-semibold text-lg text-gray-800">
+                                <p className="font-semibold text-lg text-black dark:text-white">
                                     {profile.fullName}
                                 </p>
                             )}
                         </div>
 
                         {/* EMAIL */}
-                        <div className="bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                        <div className="bg-gray-50 dark:bg-gray-900 p-5 rounded-2xl border border-gray-200 dark:border-gray-800">
 
-                            <div className="flex items-center gap-2 mb-3 text-gray-500">
+                            <div className="flex items-center gap-2 mb-3 text-gray-500 dark:text-gray-400">
                                 <Mail size={18} />
                                 <span>Email Address</span>
                             </div>
 
-                            <p className="font-semibold text-lg text-gray-800 break-all">
+                            <p className="font-semibold text-lg text-black dark:text-white break-all">
                                 {profile.email}
                             </p>
                         </div>
 
                         {/* COLLEGE */}
-                        <div className="bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                        <div className="bg-gray-50 dark:bg-gray-900 p-5 rounded-2xl border border-gray-200 dark:border-gray-800">
 
-                            <div className="flex items-center gap-2 mb-3 text-gray-500">
+                            <div className="flex items-center gap-2 mb-3 text-gray-500 dark:text-gray-400">
                                 <Building2 size={18} />
                                 <span>College Name</span>
                             </div>
@@ -176,24 +176,24 @@ function AdminProfile() {
                                     name="collegeName"
                                     value={profile.collegeName}
                                     onChange={handleChange}
-                                    className="w-full p-3 rounded-xl border outline-none focus:ring-2 focus:ring-blue-300"
+                                    className="w-full p-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-black text-black dark:text-white outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             ) : (
-                                <p className="font-semibold text-lg text-gray-800">
+                                <p className="font-semibold text-lg text-black dark:text-white">
                                     {profile.collegeName}
                                 </p>
                             )}
                         </div>
 
                         {/* ROLE */}
-                        <div className="bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                        <div className="bg-gray-50 dark:bg-gray-900 p-5 rounded-2xl border border-gray-200 dark:border-gray-800">
 
-                            <div className="flex items-center gap-2 mb-3 text-gray-500">
+                            <div className="flex items-center gap-2 mb-3 text-gray-500 dark:text-gray-400">
                                 <ShieldCheck size={18} />
                                 <span>Role</span>
                             </div>
 
-                            <p className="font-semibold text-lg capitalize text-gray-800">
+                            <p className="font-semibold text-lg capitalize text-black dark:text-white">
                                 {profile.role}
                             </p>
                         </div>
@@ -210,7 +210,7 @@ function AdminProfile() {
 
                                 navigate("/login?role=admin");
                             }}
-                            className="px-6 py-3 border border-red-300 text-red-600 rounded-xl hover:bg-red-50 transition"
+                            className="px-6 py-3 border border-red-300 dark:border-red-800 text-red-600 dark:text-red-400 rounded-xl hover:bg-red-50 dark:hover:bg-red-950 transition"
                         >
                             Logout
                         </button>

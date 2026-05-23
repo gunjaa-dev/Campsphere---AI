@@ -14,44 +14,44 @@ function Profile() {
     fetchProfile();
   }, []);
 
- const fetchProfile = async () => {
-  try {
-    const savedProfile = JSON.parse(
-      localStorage.getItem("profile")
-    );
+  const fetchProfile = async () => {
+    try {
+      const savedProfile = JSON.parse(
+        localStorage.getItem("profile")
+      );
 
-    const localUser =
-      JSON.parse(localStorage.getItem("user")) || {};
+      const localUser =
+        JSON.parse(localStorage.getItem("user")) || {};
 
-    if (savedProfile) {
-      setProfile(savedProfile);
-      setDraft(savedProfile);
-      setSkills(savedProfile.skills || []);
-      return;
+      if (savedProfile) {
+        setProfile(savedProfile);
+        setDraft(savedProfile);
+        setSkills(savedProfile.skills || []);
+        return;
+      }
+
+      const fallbackProfile = {
+        name: localUser.fullName || "New User",
+        role: "Student",
+        email: localUser.email || "",
+        phone: "",
+        location: "",
+        bio: "",
+        college: "",
+        degree: "",
+        year: "",
+        cgpa: "",
+        skills: [],
+        projects: [],
+      };
+
+      setProfile(fallbackProfile);
+      setDraft(fallbackProfile);
+      setSkills([]);
+    } catch (err) {
+      console.log(err);
     }
-
-    const fallbackProfile = {
-      name: localUser.fullName || "New User",
-      role: "Student",
-      email: localUser.email || "",
-      phone: "",
-      location: "",
-      bio: "",
-      college: "",
-      degree: "",
-      year: "",
-      cgpa: "",
-      skills: [],
-      projects: [],
-    };
-
-    setProfile(fallbackProfile);
-    setDraft(fallbackProfile);
-    setSkills([]);
-  } catch (err) {
-    console.log(err);
-  }
-};
+  };
 
   const [editing, setEditing] = useState(false);
 
@@ -103,20 +103,20 @@ function Profile() {
   };
 
   if (!profile || !draft) {
-    return <div>
+    return <div className="dark:bg-gray-950 dark:text-white min-h-screen p-6">
       Loading profile...
     </div>
   }
 
   return (
-    <div className="flex-1 min-h-screen bg-gray-100 p-4 sm:p-6 lg:p-8 opacity-100">
+    <div className="flex-1 min-h-screen bg-gray-100 dark:bg-gray-950 dark:text-white p-4 sm:p-6 lg:p-8 opacity-100">
       <div className="w-full max-w-none space-y-6 opacity-100">
 
         {/* HEADER */}
         <div className="flex flex-col sm:flex-row justify-between gap-4">
           <div>
             <h2 className="text-xl sm:text-2xl font-bold">My Profile</h2>
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
               Manage your profile
             </p>
           </div>
@@ -125,7 +125,7 @@ function Profile() {
             <div className="flex gap-2">
               <button
                 onClick={handleCancel}
-                className="flex items-center gap-1 px-4 py-2 border border-gray-300 bg-white rounded-lg"
+                className="flex items-center gap-1 px-4 py-2 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 dark:text-white rounded-lg"
               >
                 <X size={14} /> Cancel
               </button>
@@ -139,7 +139,7 @@ function Profile() {
           ) : (
             <button
               onClick={() => setEditing(true)}
-              className="flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded"
+              className="flex items-center gap-1 px-3 py-1 bg-blue-600 hover:bg-blue-700 transition text-white rounded"
             >
               <Edit2 size={14} /> Edit
             </button>
@@ -147,7 +147,7 @@ function Profile() {
         </div>
 
         {/* PROFILE CARD */}
-        <div className="w-full bg-white rounded-xl shadow p-4 sm:p-6">
+        <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow border dark:border-gray-700 p-4 sm:p-6">
           <div className="flex flex-col sm:flex-row gap-4">
 
             {/* Avatar */}
@@ -167,7 +167,7 @@ function Profile() {
               {editing ? (
                 <>
                   <input
-                    className="w-full border p-2 rounded"
+                    className="w-full border dark:border-gray-700 dark:bg-gray-800 dark:text-white p-2 rounded"
                     placeholder="Enter your full name"
                     value={draft.name}
                     onChange={(e) =>
@@ -175,7 +175,7 @@ function Profile() {
                     }
                   />
                   <input
-                    className="w-full border p-2 rounded"
+                    className="w-full border dark:border-gray-700 dark:bg-gray-800 dark:text-white p-2 rounded"
                     placeholder="Enter your role"
                     value={draft.role}
                     onChange={(e) =>
@@ -183,7 +183,7 @@ function Profile() {
                     }
                   />
                   <textarea
-                    className="w-full border p-2 rounded"
+                    className="w-full border dark:border-gray-700 dark:bg-gray-800 dark:text-white p-2 rounded"
                     placeholder="Write about yourself"
                     value={draft.bio}
                     onChange={(e) =>
@@ -194,8 +194,10 @@ function Profile() {
               ) : (
                 <>
                   <h2 className="text-lg font-semibold">{profile.name}</h2>
-                  <p className="text-gray-500">{profile.role}</p>
-                  <p className="text-sm">{profile.bio}</p>
+                  <p className="text-gray-500 dark:text-gray-400">{profile.role}</p>
+                  <p className="text-sm dark:text-gray-300">
+                    {profile.bio}
+                  </p>
                 </>
               )}
             </div>
@@ -207,7 +209,7 @@ function Profile() {
               <div key={field} className="flex items-center gap-2">
                 {editing ? (
                   <input
-                    className="w-full border p-2 rounded"
+                    className="w-full border dark:border-gray-700 dark:bg-gray-800 dark:text-white p-2 rounded"
                     placeholder={
                       field === "email"
                         ? "Enter your email"
@@ -222,7 +224,9 @@ function Profile() {
                     }
                   />
                 ) : (
-                  <span>{profile[field] || "Not added yet"}</span>
+                  <span className="dark:text-gray-200">
+                    {profile[field] || "Not added yet"}
+                  </span>
                 )}
               </div>
             ))}
@@ -230,7 +234,7 @@ function Profile() {
         </div>
 
         {/* EDUCATION */}
-        <div className="w-full bg-white rounded-xl shadow p-4 sm:p-6">
+        <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow border dark:border-gray-700 p-4 sm:p-6">
           <h3 className="font-semibold mb-4 flex items-center gap-2">
             <GraduationCap size={18} /> Education
           </h3>
@@ -240,7 +244,7 @@ function Profile() {
               editing ? (
                 <input
                   key={field}
-                  className="border p-2 rounded"
+                  className="border dark:border-gray-700 dark:bg-gray-800 dark:text-white p-2 rounded"
                   placeholder={
                     field === "college"
                       ? "Enter college name"
@@ -258,8 +262,8 @@ function Profile() {
                 />
               ) : (
                 <div key={field}>
-                  <p className="text-sm text-gray-500">{field}</p>
-                  <p className="font-medium">
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{field}</p>
+                  <p className="font-medium dark:text-gray-200">
                     {profile[field] || "Not added yet"}
                   </p>
                 </div>
@@ -269,14 +273,14 @@ function Profile() {
         </div>
 
         {/* SKILLS */}
-        <div className="w-full bg-white rounded-xl shadow p-4 sm:p-6">
+        <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow border dark:border-gray-700 p-4 sm:p-6">
           <h3 className="font-semibold mb-4">Skills</h3>
 
           <div className="flex flex-wrap gap-2">
             {skills.map((s) => (
               <div
                 key={s}
-                className="bg-gray-200 px-3 py-1 rounded flex items-center gap-1"
+                className="bg-gray-200 dark:bg-gray-800 dark:text-gray-200 px-3 py-1 rounded flex items-center gap-1"
               >
                 {s}
                 {editing && (
@@ -293,7 +297,7 @@ function Profile() {
           {editing && (
             <div className="flex gap-2 mt-3 flex-wrap">
               <input
-                className="border p-2 rounded"
+                className="border dark:border-gray-700 dark:bg-gray-800 dark:text-white p-2 rounded"
                 placeholder="Add skill"
                 value={newSkill}
                 onChange={(e) => setNewSkill(e.target.value)}
@@ -301,7 +305,7 @@ function Profile() {
               />
               <button
                 onClick={addSkill}
-                className="bg-blue-600 text-white px-3 rounded"
+                className="bg-blue-600 hover:bg-blue-700 transition text-white px-3 rounded"
               >
                 Add
               </button>
@@ -310,7 +314,7 @@ function Profile() {
         </div>
 
         {/* PROJECTS */}
-        <div className="w-full bg-white rounded-xl shadow p-4 sm:p-6">
+        <div className="w-full bg-white dark:bg-gray-900 rounded-xl shadow border dark:border-gray-700 p-4 sm:p-6">
           <div className="flex items-center justify-between mb-4">
 
             <h3 className="font-semibold">
@@ -333,7 +337,7 @@ function Profile() {
                     projects: updatedProjects,
                   });
                 }}
-                className="bg-blue-600 text-white px-3 py-1 rounded text-sm"
+                className="bg-blue-600 hover:bg-blue-700 transition text-white px-3 py-1 rounded text-sm"
               >
                 Add Project
               </button>
@@ -346,13 +350,13 @@ function Profile() {
               {draft.projects.map((project, index) => (
                 <div
                   key={index}
-                  className="border p-3 rounded space-y-2"
+                  className="border dark:border-gray-700 dark:bg-gray-800 p-3 rounded space-y-2"
                 >
 
                   {editing ? (
                     <>
                       <input
-                        className="w-full border p-2 rounded"
+                        className="w-full border dark:border-gray-700 dark:bg-gray-800 dark:text-white p-2 rounded"
                         placeholder="Project title"
                         value={project.title}
                         onChange={(e) => {
@@ -369,7 +373,7 @@ function Profile() {
                       />
 
                       <textarea
-                        className="w-full border p-2 rounded"
+                        className="w-full border dark:border-gray-700 dark:bg-gray-800 dark:text-white p-2 rounded"
                         placeholder="Project description"
                         value={project.description}
                         onChange={(e) => {
@@ -408,7 +412,7 @@ function Profile() {
                         {project.title}
                       </p>
 
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
                         {project.description}
                       </p>
                     </>
@@ -418,7 +422,7 @@ function Profile() {
 
             </div>
           ) : (
-            <div className="text-gray-500 text-sm border rounded p-4 text-center">
+            <div className="text-gray-500 dark:text-gray-400 text-sm border dark:border-gray-700 rounded p-4 text-center">
               No projects added yet
             </div>
           )}
